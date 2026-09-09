@@ -69,8 +69,14 @@
   </div>
 </div>
 
+<!-- Scroll To Top Floating Button -->
+<button type="button" class="aura-scroll-top-btn" id="AuraScrollTopBtn" aria-label="Scroll to top">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    /* 1. Mobile Drawer Logic */
     const openBtn = document.getElementById('AuraMobileMenuOpen');
     const closeBtn = document.getElementById('AuraMobileMenuClose');
     const overlay = document.getElementById('AuraMobileDrawerOverlay');
@@ -91,12 +97,63 @@
     openBtn?.addEventListener('click', openDrawer);
     closeBtn?.addEventListener('click', closeDrawer);
     overlay?.addEventListener('click', closeDrawer);
+
+    /* 2. Sticky Header Logic */
+    const headerWrapper = document.querySelector('.aura-luneva-header-wrapper');
+    const headerHeight = headerWrapper ? headerWrapper.offsetHeight : 80;
+
+    /* 3. Scroll-To-Top Logic */
+    const scrollTopBtn = document.getElementById('AuraScrollTopBtn');
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+
+      // Sticky Header Toggle
+      if (scrollY > headerHeight) {
+        headerWrapper?.classList.add('is-sticky');
+      } else {
+        headerWrapper?.classList.remove('is-sticky');
+      }
+
+      // Scroll-To-Top Toggle
+      if (scrollY > 300) {
+        scrollTopBtn?.classList.add('is-visible');
+      } else {
+        scrollTopBtn?.classList.remove('is-visible');
+      }
+    });
+
+    scrollTopBtn?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   });
 </script>
 
 {% stylesheet %}
   .aura-luneva-header-wrapper {
     position: relative !important;
+    transition: background-color 200ms ease;
+  }
+
+  /* Sticky Header State */
+  .aura-luneva-header-wrapper.is-sticky {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    z-index: 1000 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    background-color: #FFFFFF !important;
+    animation: auraHeaderStickySlideDown 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes auraHeaderStickySlideDown {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
 
   .aura-brand-logo {
@@ -120,6 +177,49 @@
     justify-content: center !important;
     line-height: 1 !important;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Floating Scroll-To-Top Button */
+  .aura-scroll-top-btn {
+    position: fixed;
+    bottom: 2.25rem;
+    right: 2.25rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #0F0F11;
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.8);
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+  }
+
+  .aura-scroll-top-btn.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .aura-scroll-top-btn:hover {
+    background: #1F2024;
+    transform: translateY(-4px) scale(1.08);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .aura-scroll-top-btn svg {
+    transition: transform 200ms ease;
+  }
+
+  .aura-scroll-top-btn:hover svg {
+    transform: translateY(-2px);
   }
 
   @media (min-width: 990px) {

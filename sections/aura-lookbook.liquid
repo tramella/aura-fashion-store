@@ -7,12 +7,13 @@
     <div class="aura-circle-icon">&searr;</div>
   </div>
 
+  <!-- Bento Grid: Left Col = 1/2 (50%), Right Col = 1/2 (50%) -->
   <div class="aura-bento-grid">
-    <!-- Big Left Image Card -->
+    <!-- First Image First Col (1/2 Width = 50%) -->
     <div class="aura-bento-card aura-bento-card--large">
       <div class="aura-bento-card__media">
         {%- if section.settings.image_large != blank -%}
-          <img src="{{ section.settings.image_large | image_url: width: 800 }}" alt="New Arrivals" loading="lazy" width="800" height="1000">
+          <img src="{{ section.settings.image_large | image_url: width: 1000 }}" alt="New Arrivals" loading="lazy" width="1000" height="1200">
         {%- else -%}
           {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
         {%- endif -%}
@@ -20,40 +21,43 @@
       <span class="aura-bento-badge">New Arrivals</span>
     </div>
 
-    <!-- Top Center Card -->
-    <div class="aura-bento-card">
-      <div class="aura-bento-card__media">
-        {%- if section.settings.image_mid != blank -%}
-          <img src="{{ section.settings.image_mid | image_url: width: 600 }}" alt="Seasonal Must-Haves" loading="lazy" width="600" height="600">
-        {%- else -%}
-          {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
-        {%- endif -%}
+    <!-- Right Side (1/2 Width = 50% divided into 2x2 grid) -->
+    <div class="aura-bento-right-wrap">
+      <!-- Top Center Card -->
+      <div class="aura-bento-card">
+        <div class="aura-bento-card__media">
+          {%- if section.settings.image_mid != blank -%}
+            <img src="{{ section.settings.image_mid | image_url: width: 600 }}" alt="Seasonal Must-Haves" loading="lazy" width="600" height="600">
+          {%- else -%}
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+        <span class="aura-bento-badge">Seasonal Must-Haves</span>
       </div>
-      <span class="aura-bento-badge">Seasonal Must-Haves</span>
-    </div>
 
-    <!-- Top Right Card -->
-    <div class="aura-bento-card">
-      <div class="aura-bento-card__media">
-        {%- if section.settings.image_right != blank -%}
-          <img src="{{ section.settings.image_right | image_url: width: 600 }}" alt="Curated for You" loading="lazy" width="600" height="600">
-        {%- else -%}
-          {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
-        {%- endif -%}
+      <!-- Top Right Card -->
+      <div class="aura-bento-card">
+        <div class="aura-bento-card__media">
+          {%- if section.settings.image_right != blank -%}
+            <img src="{{ section.settings.image_right | image_url: width: 600 }}" alt="Curated for You" loading="lazy" width="600" height="600">
+          {%- else -%}
+            {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+        <span class="aura-bento-badge">Curated for You</span>
       </div>
-      <span class="aura-bento-badge">Curated for You</span>
-    </div>
 
-    <!-- Bottom Right Text Content Block -->
-    <div class="aura-bento-text-card">
-      <h3 class="aura-bento-text-title">
-        <span>Sustainably designed,</span>
-        <span class="aura-serif-italic">effortlessly worn.</span>
-      </h3>
+      <!-- Bottom Right Text Content Block (Spans full right width) -->
+      <div class="aura-bento-text-card">
+        <h3 class="aura-bento-text-title">
+          <span>Sustainably designed,</span>
+          <span class="aura-serif-italic">effortlessly worn.</span>
+        </h3>
 
-      <div class="aura-bento-text-footer">
-        <a href="/collections/all" class="aura-btn aura-btn--primary">Shop Now</a>
-        <p class="aura-bento-text-desc">Elevate your wardrobe with our exclusive collections, designed for modern living.</p>
+        <div class="aura-bento-text-footer">
+          <a href="/collections/all" class="aura-btn aura-btn--primary">Shop Now</a>
+          <p class="aura-bento-text-desc">Elevate your wardrobe with our exclusive collections, designed for modern living.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -61,19 +65,19 @@
 
 {% stylesheet %}
   .aura-wear-moment {
-    padding-top: 2rem;
-    padding-bottom: 4rem;
+    padding-top: 3rem;
+    padding-bottom: 5rem;
   }
 
   .aura-wear-moment__header {
     display: flex;
     align-items: flex-end;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
   }
 
   .aura-wear-moment__title {
-    font-size: clamp(2rem, 4.5vw, 3.4rem);
+    font-size: clamp(2.2rem, 4.5vw, 3.6rem);
     line-height: 1.08;
     margin: 0;
     display: flex;
@@ -93,31 +97,60 @@
     margin-bottom: 6px;
   }
 
+  /* Bento Grid Layout: 50% Left (1/2), 50% Right (1/2) */
   .aura-bento-grid {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 1.25rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
   }
 
-  @media (max-width: 900px) {
-    .aura-bento-grid {
-      grid-template-columns: 1fr;
-    }
+  /* First Column Large Card (1/2 Width = 50%) */
+  .aura-bento-card--large {
+    height: 100%;
+    min-height: 540px;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #E5E0D8;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  .aura-bento-card--large .aura-bento-card__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .aura-bento-card--large .aura-bento-card__media img,
+  .aura-bento-card--large .aura-bento-card__media svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 500ms ease;
+  }
+
+  .aura-bento-card--large:hover .aura-bento-card__media img {
+    transform: scale(1.05);
+  }
+
+  /* Right Side Grid Wrapper (50% Width) */
+  .aura-bento-right-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 1.5rem;
   }
 
   .aura-bento-card {
     position: relative;
-    border-radius: 24px;
+    border-radius: 20px;
     overflow: hidden;
-    background: #E5E2DC;
-    aspect-ratio: 4 / 4;
-  }
-
-  .aura-bento-card--large {
-    grid-row: span 2;
-    aspect-ratio: auto;
-    min-height: 500px;
+    background: #E5E0D8;
+    aspect-ratio: 1 / 1;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   }
 
   .aura-bento-card__media {
@@ -125,46 +158,53 @@
     height: 100%;
   }
 
-  .aura-bento-card__media img {
+  .aura-bento-card__media img,
+  .aura-bento-card__media svg {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+    transition: transform 400ms ease;
+  }
+
+  .aura-bento-card:hover .aura-bento-card__media img {
+    transform: scale(1.06);
   }
 
   .aura-bento-badge {
     position: absolute;
     bottom: 16px;
     right: 16px;
-    background: #FFFFFF;
-    color: #0F0F11;
-    padding: 7px 18px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 8px 18px;
     border-radius: 9999px;
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     font-weight: 700;
+    color: #0F0F11;
+    z-index: 3;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   .aura-bento-text-card {
-    grid-column: span 2;
-    background: #FFFFFF;
-    border-radius: 24px;
-    padding: 2.5rem 2rem;
+    grid-column: 1 / -1;
+    background: transparent;
+    border-radius: 0;
+    padding: 1.5rem 0 0 0;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-  }
-
-  @media (max-width: 900px) {
-    .aura-bento-text-card {
-      grid-column: span 1;
-    }
+    min-height: 180px;
   }
 
   .aura-bento-text-title {
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+    font-weight: 600;
     line-height: 1.15;
     margin: 0 0 1.5rem 0;
+    color: #0F0F11;
     display: flex;
     flex-direction: column;
   }
@@ -172,50 +212,57 @@
   .aura-bento-text-footer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1.5rem;
   }
 
-  @media (max-width: 600px) {
+  .aura-bento-text-desc {
+    font-size: 0.9rem;
+    color: #4B5563;
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 989px) {
+    .aura-bento-grid {
+      grid-template-columns: 1fr;
+    }
+    .aura-bento-right-wrap {
+      grid-template-columns: 1fr;
+    }
     .aura-bento-text-footer {
       flex-direction: column;
       align-items: flex-start;
     }
   }
-
-  .aura-bento-text-desc {
-    font-size: 0.85rem;
-    color: #6B7280;
-    margin: 0;
-    line-height: 1.45;
-    max-width: 320px;
-  }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Lunéva Bento Lookbook",
+  "name": "Wear the Moment Lookbook",
   "tag": "section",
-  "class": "section-luneva-bento",
+  "class": "section-aura-lookbook",
   "settings": [
     {
       "type": "image_picker",
       "id": "image_large",
-      "label": "Left Large Image"
+      "label": "Large Image (Left 1/2 Column)"
     },
     {
       "type": "image_picker",
       "id": "image_mid",
-      "label": "Middle Top Image"
+      "label": "Middle Image (Right Top Left)"
     },
     {
       "type": "image_picker",
       "id": "image_right",
-      "label": "Right Top Image"
+      "label": "Right Image (Right Top Right)"
     }
   ],
   "presets": [
     {
-      "name": "Lunéva Bento Lookbook"
+      "name": "Wear the Moment Lookbook"
     }
   ]
 }

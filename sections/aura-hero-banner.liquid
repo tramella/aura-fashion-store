@@ -1,12 +1,12 @@
-<div class="aura-hero-luneva page-width">
-  <div class="aura-hero-luneva-card" id="AuraHeroCard">
+<div class="aura-hero-luneva w-full relative overflow-hidden">
+  <div class="aura-hero-luneva-card w-full" id="AuraHeroCard">
     <!-- Slide 1 -->
     <div class="aura-hero-slide is-active">
       <div class="aura-hero-luneva-card__media">
         {%- if section.settings.image != blank -%}
           <img
             srcset="{{ section.settings.image | image_url: width: 750 }} 750w, {{ section.settings.image | image_url: width: 1400 }} 1400w, {{ section.settings.image | image_url: width: 2000 }} 2000w"
-            src="{{ section.settings.image | image_url: width: 1400 }}"
+            src="{{ section.settings.image | image_url: width: 2000 }}"
             sizes="100vw"
             alt="{{ section.settings.heading_1 | escape }}"
             fetchpriority="high"
@@ -48,11 +48,11 @@
       <div class="aura-hero-luneva-card__media">
         {%- if section.settings.image_2 != blank -%}
           <img
-            src="{{ section.settings.image_2 | image_url: width: 1400 }}"
+            src="{{ section.settings.image_2 | image_url: width: 2000 }}"
             alt="Elevated Essentials"
             loading="lazy"
-            width="1400"
-            height="800"
+            width="2000"
+            height="1000"
             class="aura-hero-luneva-card__img"
           >
         {%- else -%}
@@ -83,10 +83,10 @@
       </div>
     </div>
 
-    <!-- Bottom Right Slider Circles -->
+    <!-- Bottom Right Slider Controls (Arrows ← → matching media_1788969994671.png) -->
     <div class="aura-hero-luneva-controls">
-      <button type="button" class="aura-circle-control" id="AuraHeroPrev" aria-label="Previous slide">&lsaquo;</button>
-      <button type="button" class="aura-circle-control aura-circle-control--white" id="AuraHeroNext" aria-label="Next slide">&rsaquo;</button>
+      <button type="button" class="aura-circle-control" id="AuraHeroPrev" aria-label="Previous slide">&larr;</button>
+      <button type="button" class="aura-circle-control aura-circle-control--white" id="AuraHeroNext" aria-label="Next slide">&rarr;</button>
     </div>
   </div>
 </div>
@@ -100,6 +100,7 @@
     const prevBtn = document.getElementById('AuraHeroPrev');
     const nextBtn = document.getElementById('AuraHeroNext');
     let currentIndex = 0;
+    let autoSlideTimer = null;
 
     function showSlide(index) {
       slides.forEach((slide, i) => {
@@ -107,37 +108,55 @@
       });
     }
 
+    function startAutoSlide() {
+      stopAutoSlide();
+      autoSlideTimer = setInterval(() => {
+        currentIndex = (currentIndex + 1) % slides.length;
+        showSlide(currentIndex);
+      }, 5000);
+    }
+
+    function stopAutoSlide() {
+      if (autoSlideTimer) clearInterval(autoSlideTimer);
+    }
+
     prevBtn?.addEventListener('click', () => {
       currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       showSlide(currentIndex);
+      startAutoSlide();
     });
 
     nextBtn?.addEventListener('click', () => {
       currentIndex = (currentIndex + 1) % slides.length;
       showSlide(currentIndex);
+      startAutoSlide();
     });
 
-    setInterval(() => {
-      currentIndex = (currentIndex + 1) % slides.length;
-      showSlide(currentIndex);
-    }, 6000);
+    heroCard.addEventListener('mouseenter', stopAutoSlide);
+    heroCard.addEventListener('mouseleave', startAutoSlide);
+
+    startAutoSlide();
   });
 </script>
 
 {% stylesheet %}
   .aura-hero-luneva {
-    padding-top: 1.25rem;
-    padding-bottom: 3rem;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   .aura-hero-luneva-card {
     position: relative;
-    border-radius: var(--aura-radius-card, 28px);
+    border-radius: 0 !important;
     overflow: hidden;
-    min-height: 580px;
+    height: 85vh;
+    min-height: 620px;
+    max-height: 850px;
     display: flex;
     align-items: center;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+    width: 100% !important;
     background-color: #CFC8BC;
   }
 
@@ -149,21 +168,16 @@
     height: 100%;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1), visibility 600ms cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
+    transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1), visibility 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
   }
 
   .aura-hero-slide.is-active {
     opacity: 1;
     visibility: visible;
-    position: relative;
-  }
-
-  @media (max-width: 768px) {
-    .aura-hero-luneva-card {
-      min-height: 380px;
-    }
+    z-index: 2;
   }
 
   .aura-hero-luneva-card__media {
@@ -172,18 +186,30 @@
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 1;
   }
 
   .aura-hero-luneva-card__img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center right;
   }
 
   .aura-hero-luneva-card__placeholder {
     width: 100%;
     height: 100%;
-    background: #C2BBB0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #E5E0D8;
+  }
+
+  .aura-hero-luneva-card__placeholder svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
   }
 
   .aura-hero-luneva-card__overlay {
@@ -192,111 +218,139 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.58) 0%, rgba(0, 0, 0, 0.12) 65%);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.18) 55%, rgba(0, 0, 0, 0) 100%);
     z-index: 2;
   }
 
   .aura-hero-luneva-card__content {
     position: relative;
     z-index: 3;
-    padding: 4.5rem 4rem;
-    max-width: 700px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: clamp(3rem, 8vw, 9rem);
+    padding-right: 3rem;
+    box-sizing: border-box;
   }
 
-  @media (max-width: 768px) {
-    .aura-hero-luneva-card__content {
-      padding: 2rem 1.25rem;
-    }
+  .aura-hero-luneva-card__text-wrap {
+    max-width: 580px;
+    color: #FFFFFF;
   }
 
   .aura-hero-luneva-title {
-    font-size: var(--aura-fs-hero-title, clamp(2.8rem, 5.5vw, 4.8rem)) !important;
-    line-height: 1.05 !important;
-    color: #FFFFFF !important;
-    margin: 0 0 1.25rem 0 !important;
-    display: flex;
-    flex-direction: column;
+    font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    color: #FFFFFF;
+  }
+
+  .aura-hero-luneva-title span {
+    display: block;
+  }
+
+  .aura-serif-italic {
+    font-family: var(--aura-font-serif-italic);
+    font-style: italic;
+    font-weight: 400;
   }
 
   .aura-hero-luneva-desc {
-    font-size: clamp(0.92rem, 1.8vw, 1.15rem) !important;
-    line-height: 1.5 !important;
-    color: rgba(255, 255, 255, 0.95) !important;
-    margin: 0 0 2rem 0 !important;
-    max-width: 520px;
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 2.5rem;
+    max-width: 480px;
+    font-weight: 400;
+  }
+
+  .aura-hero-luneva-action .aura-btn--white {
+    background-color: #FFFFFF !important;
+    color: #0F0F11 !important;
+    border-radius: 9999px !important;
+    padding: 14px 34px !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .aura-hero-luneva-action .aura-btn--white:hover {
+    background-color: #F3F4F6 !important;
+    transform: translateY(-2px) !important;
   }
 
   .aura-hero-luneva-controls {
     position: absolute;
-    bottom: 28px;
-    right: 28px;
-    z-index: 6;
+    bottom: 3rem;
+    right: 4rem;
+    z-index: 10;
     display: flex;
-    gap: 10px;
-  }
-
-  @media (max-width: 768px) {
-    .aura-hero-luneva-controls {
-      bottom: 16px;
-      right: 16px;
-    }
+    align-items: center;
+    gap: 0.75rem;
   }
 
   .aura-circle-control {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: none;
-    cursor: pointer;
-    font-size: 1.3rem;
     color: #FFFFFF;
+    font-size: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: background 200ms ease, transform 200ms ease;
+  }
+
+  .aura-circle-control:hover {
+    background: rgba(255, 255, 255, 0.45);
+    transform: scale(1.08);
   }
 
   .aura-circle-control--white {
     background: #FFFFFF;
     color: #0F0F11;
-    font-weight: 800;
+  }
+
+  .aura-circle-control--white:hover {
+    background: #F3F4F6;
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Lunéva Hero Slider",
+  "name": "Aura Full-Width Hero",
   "tag": "section",
-  "class": "section-luneva-hero",
+  "class": "section-aura-hero-banner",
   "settings": [
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Hero Image Slide 1"
-    },
-    {
-      "type": "image_picker",
-      "id": "image_2",
-      "label": "Hero Image Slide 2"
+      "label": "Hero Image (Slide 1)"
     },
     {
       "type": "text",
       "id": "heading_1",
-      "label": "Heading Line 1 (Sans)",
+      "label": "Heading Line 1",
       "default": "Timeless Fashion,"
     },
     {
       "type": "text",
       "id": "heading_2",
-      "label": "Heading Line 2 (Italic Serif)",
+      "label": "Heading Line 2 (Italic)",
       "default": "Conscious Choices."
     },
     {
       "type": "textarea",
       "id": "text",
-      "label": "Description",
+      "label": "Description Text",
       "default": "Sustainably designed, effortlessly worn. Our pieces are made with premium materials, and wardrobe that stands the test of time."
     },
     {
@@ -309,11 +363,20 @@
       "type": "url",
       "id": "button_link",
       "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Slide 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Hero Image (Slide 2)"
     }
   ],
   "presets": [
     {
-      "name": "Lunéva Hero Slider"
+      "name": "Aura Full-Width Hero"
     }
   ]
 }

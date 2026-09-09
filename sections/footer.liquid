@@ -1,6 +1,6 @@
 <footer class="aura-luneva-footer-section">
   <div class="page-width">
-    <!-- Dark Newsletter Block -->
+    <!-- Dark Newsletter Block (Matching Image 4) -->
     <div class="aura-luneva-newsletter">
       <h2 class="aura-luneva-newsletter-title">
         <span>Subscribe Our</span>
@@ -61,19 +61,19 @@
       <div class="aura-luneva-col">
         <h3 class="aura-luneva-col-title">The Company</h3>
         <ul class="aura-luneva-link-list">
-          <li><a href="/account">My Order</a></li>
+          <li><a href="{{ routes.account_url }}">My Order</a></li>
           <li><a href="/pages/contact">Contact Us</a></li>
-          <li><a href="/pages/about">About AURA</a></li>
+          <li><a href="/pages/about">About Lunéva</a></li>
           <li><a href="/pages/faqs">FAQs</a></li>
           <li><a href="/pages/sitemap">Sitemap</a></li>
         </ul>
       </div>
     </div>
-  </div>
 
-  <!-- Giant Bottom Watermark Title -->
-  <div class="aura-luneva-footer-watermark">
-    <span>AURA</span>
+    <!-- Ultra-Large Brand Logo at Bottom (Matching Image 4) -->
+    <div class="aura-footer-big-brand">
+      <span>AURA</span>
+    </div>
   </div>
 </footer>
 
@@ -81,7 +81,8 @@
   .aura-luneva-footer-section {
     background: #0F0F11;
     color: #FFFFFF;
-    padding-top: 4rem;
+    margin-top: 5rem !important;
+    padding-top: 4.5rem;
     padding-bottom: 2rem;
     overflow: hidden;
     position: relative;
@@ -149,9 +150,9 @@
   }
 
   .aura-luneva-col-title {
-    font-size: 1rem;
-    font-weight: 700;
-    margin: 0 0 1.25rem 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
     color: #FFFFFF;
   }
 
@@ -159,47 +160,44 @@
     list-style: none;
     padding: 0;
     margin: 0;
-  }
-
-  .aura-luneva-link-list li {
-    margin-bottom: 0.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
   }
 
   .aura-luneva-link-list a {
     color: rgba(255, 255, 255, 0.65);
     text-decoration: none;
-    font-size: 0.85rem;
-    transition: color 150ms ease;
+    font-size: 0.9rem;
+    transition: color 200ms ease;
   }
 
   .aura-luneva-link-list a:hover {
     color: #FFFFFF;
   }
 
-  /* Giant Watermark Logo at Footer Bottom */
-  .aura-luneva-footer-watermark {
+  /* Ultra-Large Brand Logo at Footer Bottom (Image 4) */
+  .aura-footer-big-brand {
     text-align: center;
-    width: 100%;
     padding-top: 2rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  .aura-luneva-footer-watermark span {
+  .aura-footer-big-brand span {
     font-family: var(--aura-font-serif-italic);
-    font-style: italic;
-    font-size: clamp(5rem, 22vw, 24rem);
+    font-size: clamp(5rem, 16vw, 13rem);
     font-weight: 700;
+    line-height: 0.85;
     color: #FFFFFF;
-    line-height: 0.8;
-    letter-spacing: -0.04em;
-    display: block;
-    user-select: none;
+    opacity: 0.95;
+    letter-spacing: -0.03em;
+    display: inline-block;
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Lunéva Footer",
+  "name": "Aura Lunéva Footer",
   "tag": "section",
   "class": "section-luneva-footer",
   "settings": []

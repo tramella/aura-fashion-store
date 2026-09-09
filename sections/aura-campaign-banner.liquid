@@ -20,23 +20,25 @@
       <div class="aura-effortless-card__overlay"></div>
     </div>
 
-    <!-- Top Right Controls -->
+    <!-- Top Right Controls (← → matching media_1788970380422.png) -->
     <div class="aura-effortless-controls">
-      <button type="button" class="aura-circle-control" aria-label="Previous slide">&lsaquo;</button>
-      <button type="button" class="aura-circle-control aura-circle-control--white" aria-label="Next slide">&rsaquo;</button>
+      <button type="button" class="aura-circle-control" aria-label="Previous slide">&larr;</button>
+      <button type="button" class="aura-circle-control aura-circle-control--white" aria-label="Next slide">&rarr;</button>
     </div>
 
-    <!-- Content -->
-    <div class="aura-effortless-content">
-      <h2 class="aura-effortless-title">
-        <span>Effortless</span>
-        <span class="aura-serif-italic">Elegance</span>
-      </h2>
+    <!-- Big Center Title -->
+    <h2 class="aura-effortless-title">
+      <span>Effortless</span>
+      <span class="aura-serif-italic">Elegance</span>
+    </h2>
 
-      <p class="aura-effortless-desc">
-        {{ section.settings.text | default: 'Thoughtfully curated collections designed for modern living, blending timeless aesthetics with a commitment to sustainability and quality.' }}
-      </p>
+    <!-- Bottom Left Description -->
+    <p class="aura-effortless-desc">
+      {{ section.settings.text | default: 'Thoughtfully curated collections designed for modern living, blending timeless aesthetics with a commitment to sustainability and quality.' }}
+    </p>
 
+    <!-- Bottom Centered White Pill Button -->
+    <div class="aura-effortless-action">
       <a href="{{ section.settings.button_link | default: '/collections/all' }}" class="aura-btn aura-btn--white">
         {{ section.settings.button_label | default: 'Explore the Collections' }}
       </a>
@@ -46,21 +48,20 @@
 
 {% stylesheet %}
   .aura-effortless-banner {
-    padding-top: 2rem;
-    padding-bottom: 4rem;
+    padding-top: 3rem;
+    padding-bottom: 5rem;
   }
 
   .aura-effortless-card {
     position: relative;
-    border-radius: 28px;
+    border-radius: 20px;
     overflow: hidden;
-    min-height: 480px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
-    background-color: #B5AEA4;
+    height: 70vh;
+    min-height: 520px;
+    max-height: 700px;
+    width: 100%;
+    background-color: #CFC8BC;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
   }
 
   .aura-effortless-card__media {
@@ -80,7 +81,17 @@
   .aura-effortless-card__placeholder {
     width: 100%;
     height: 100%;
-    background: #ADA69C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #E5E0D8;
+  }
+
+  .aura-effortless-card__placeholder svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
   }
 
   .aura-effortless-card__overlay {
@@ -89,54 +100,78 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.35);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0.4) 100%);
     z-index: 2;
   }
 
   .aura-effortless-controls {
     position: absolute;
-    top: 24px;
-    right: 28px;
-    z-index: 4;
+    top: 2rem;
+    right: 2rem;
+    z-index: 10;
     display: flex;
-    gap: 8px;
-  }
-
-  .aura-effortless-content {
-    position: relative;
-    z-index: 3;
-    padding: 3rem 2rem;
-    max-width: 580px;
-    color: #FFFFFF;
-    display: flex;
-    flex-direction: column;
     align-items: center;
+    gap: 0.75rem;
   }
 
   .aura-effortless-title {
-    font-size: clamp(2.8rem, 6vw, 4.8rem);
-    line-height: 1.05;
-    margin: 0 0 1.25rem 0;
+    position: absolute;
+    top: 38%;
+    left: 6%;
+    transform: translateY(-50%);
+    z-index: 3;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 500;
     color: #FFFFFF;
+    line-height: 1.05;
+    margin: 0;
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
+    gap: 1.25rem;
+    align-items: baseline;
   }
 
   .aura-effortless-desc {
-    font-size: 0.92rem;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.92);
-    margin: 0 0 2rem 0;
+    position: absolute;
+    bottom: 7.5rem;
+    left: 6%;
+    z-index: 3;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.95);
+    max-width: 440px;
+    margin: 0;
+  }
+
+  .aura-effortless-action {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+  }
+
+  .aura-effortless-action .aura-btn--white {
+    background-color: #FFFFFF !important;
+    color: #0F0F11 !important;
+    border-radius: 9999px !important;
+    padding: 14px 34px !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    white-space: nowrap;
+  }
+
+  .aura-effortless-action .aura-btn--white:hover {
+    background-color: #F3F4F6 !important;
+    transform: translateY(-2px) !important;
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Lunéva Campaign Banner",
+  "name": "Campaign Banner",
   "tag": "section",
-  "class": "section-luneva-campaign",
+  "class": "section-aura-campaign-banner",
   "settings": [
     {
       "type": "image_picker",
@@ -146,7 +181,7 @@
     {
       "type": "textarea",
       "id": "text",
-      "label": "Description",
+      "label": "Description Text",
       "default": "Thoughtfully curated collections designed for modern living, blending timeless aesthetics with a commitment to sustainability and quality."
     },
     {
@@ -163,7 +198,7 @@
   ],
   "presets": [
     {
-      "name": "Lunéva Campaign Banner"
+      "name": "Campaign Banner"
     }
   ]
 }

@@ -58,10 +58,11 @@
 
   .aura-trending-card__media-wrap {
     position: relative;
-    aspect-ratio: 3 / 4;
-    border-radius: 20px;
+    aspect-ratio: 3 / 4 !important;
+    width: 100% !important;
+    border-radius: 16px;
     overflow: hidden;
-    background: #E8E5DF;
+    background: #F3F4F6;
     margin-bottom: 14px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
   }
@@ -72,10 +73,12 @@
     height: 100%;
   }
 
-  .aura-trending-card__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .aura-trending-card__img,
+  .aura-trending-card__media-wrap svg {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block;
     transition: transform 400ms ease;
   }
 

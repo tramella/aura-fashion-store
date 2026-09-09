@@ -10,12 +10,12 @@ body {
   overflow-x: hidden;
 }
 
-/* Mixed Typography: High Fashion Italic Serif */
+/* Mixed Typography: High Fashion Thin Italic Serif */
 .aura-serif-italic, .aura-font-serif {
   font-family: var(--aura-font-serif-italic) !important;
   font-style: italic !important;
-  font-weight: 600 !important;
-  letter-spacing: 0em !important;
+  font-weight: 300 !important;
+  letter-spacing: -0.01em !important;
 }
 
 /* Header Reset */
@@ -66,13 +66,107 @@ body {
 
 /* Laptop & Desktop Enhancements (>= 990px) */
 @media (min-width: 990px) {
-  .page-width {
+  .page-width:not(.aura-hero-luneva) {
     width: 80% !important;
     max-width: 80% !important;
     margin-left: auto !important;
     margin-right: auto !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+  }
+
+  /* Trending Now & Product Grids Horizontal Layout */
+  .grid--4-col-desktop,
+  .product-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 1.75rem !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .grid__item {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Slider Component 80% Width Centered Layout */
+  slider-component,
+  .slider-component-full-width,
+  .slider-mobile-gutter {
+    width: 80% !important;
+    max-width: 80% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
+  }
+
+  .card-wrapper,
+  .card,
+  .aura-trending-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+  }
+
+  .card__media,
+  .card__media .media,
+  .aura-trending-card__media-wrap {
+    aspect-ratio: 3 / 4 !important;
+    width: 100% !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    background-color: #F3F4F6 !important;
+  }
+
+  .card__media img,
+  .card__media svg,
+  .media img,
+  .media svg,
+  .aura-trending-card__img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+  /* Trending Now Title & Show All Button (Matching Image 2) */
+  .collection__title {
+    text-align: center !important;
+    margin-bottom: 2.5rem !important;
+  }
+
+  .collection__title .title {
+    font-size: clamp(2rem, 3.5vw, 2.8rem) !important;
+    font-weight: 500 !important;
+    color: #0F0F11 !important;
+    text-align: center !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .collection__view-all {
+    text-align: center !important;
+    margin-top: 3rem !important;
+  }
+
+  .collection__view-all .button {
+    background: transparent !important;
+    color: #0F0F11 !important;
+    border: 1px solid #0F0F11 !important;
+    border-radius: 9999px !important;
+    padding: 12px 40px !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+  }
+
+  .collection__view-all .button:hover {
+    background: #0F0F11 !important;
+    color: #FFFFFF !important;
   }
 
   h1, .h1 {
