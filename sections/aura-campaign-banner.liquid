@@ -1,0 +1,170 @@
+<div class="aura-effortless-banner page-width">
+  <div class="aura-effortless-card">
+    <div class="aura-effortless-card__media">
+      {%- if section.settings.image != blank -%}
+        <img
+          srcset="{{ section.settings.image | image_url: width: 750 }} 750w, {{ section.settings.image | image_url: width: 1400 }} 1400w, {{ section.settings.image | image_url: width: 2000 }} 2000w"
+          src="{{ section.settings.image | image_url: width: 1400 }}"
+          sizes="100vw"
+          alt="Effortless Elegance"
+          loading="lazy"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          class="aura-effortless-card__img"
+        >
+      {%- else -%}
+        <div class="aura-effortless-card__placeholder">
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- endif -%}
+      <div class="aura-effortless-card__overlay"></div>
+    </div>
+
+    <!-- Top Right Controls -->
+    <div class="aura-effortless-controls">
+      <button type="button" class="aura-circle-control" aria-label="Previous slide">&lsaquo;</button>
+      <button type="button" class="aura-circle-control aura-circle-control--white" aria-label="Next slide">&rsaquo;</button>
+    </div>
+
+    <!-- Content -->
+    <div class="aura-effortless-content">
+      <h2 class="aura-effortless-title">
+        <span>Effortless</span>
+        <span class="aura-serif-italic">Elegance</span>
+      </h2>
+
+      <p class="aura-effortless-desc">
+        {{ section.settings.text | default: 'Thoughtfully curated collections designed for modern living, blending timeless aesthetics with a commitment to sustainability and quality.' }}
+      </p>
+
+      <a href="{{ section.settings.button_link | default: '/collections/all' }}" class="aura-btn aura-btn--white">
+        {{ section.settings.button_label | default: 'Explore the Collections' }}
+      </a>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .aura-effortless-banner {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+  }
+
+  .aura-effortless-card {
+    position: relative;
+    border-radius: 28px;
+    overflow: hidden;
+    min-height: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+    background-color: #B5AEA4;
+  }
+
+  .aura-effortless-card__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .aura-effortless-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .aura-effortless-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background: #ADA69C;
+  }
+
+  .aura-effortless-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 2;
+  }
+
+  .aura-effortless-controls {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    z-index: 4;
+    display: flex;
+    gap: 8px;
+  }
+
+  .aura-effortless-content {
+    position: relative;
+    z-index: 3;
+    padding: 3rem 2rem;
+    max-width: 580px;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .aura-effortless-title {
+    font-size: clamp(2.8rem, 6vw, 4.8rem);
+    line-height: 1.05;
+    margin: 0 0 1.25rem 0;
+    color: #FFFFFF;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .aura-effortless-desc {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0 0 2rem 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Lunéva Campaign Banner",
+  "tag": "section",
+  "class": "section-luneva-campaign",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Banner Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Description",
+      "default": "Thoughtfully curated collections designed for modern living, blending timeless aesthetics with a commitment to sustainability and quality."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Explore the Collections"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lunéva Campaign Banner"
+    }
+  ]
+}
+{% endschema %}

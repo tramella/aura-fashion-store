@@ -1,0 +1,112 @@
+{% doc %}
+  Sticky mobile Add to Cart bar rendering thumbnail, product title, price, selected variant, and instant buy button when scrolling past main PDP CTA.
+  
+  @param {object} product - Shopify product object
+{% enddoc %}
+
+<div id="AuraStickyAtcBar" class="aura-sticky-bar aura-sticky-atc-bar medium-hide large-up-hide">
+  <div class="aura-sticky-atc__info">
+    {%- if product.featured_media != blank -%}
+      <img
+        src="{{ product.featured_media | image_url: width: 80, height: 80, crop: 'center' }}"
+        alt="{{ product.title | escape }}"
+        width="44"
+        height="44"
+        loading="lazy"
+        class="aura-sticky-atc__thumb"
+      >
+    {%- endif -%}
+    <div class="aura-sticky-atc__text">
+      <span class="aura-sticky-atc__title">{{ product.title | truncate: 25 }}</span>
+      <span class="aura-sticky-atc__price">{{ product.selected_or_first_available_variant.price | money }}</span>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    id="AuraStickyAtcSubmit"
+    class="aura-btn aura-btn--accent aura-sticky-atc__btn"
+    {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+  >
+    {%- if product.selected_or_first_available_variant.available -%}
+      {{ 'products.product.add_to_cart' | t | default: 'Add to Cart' }}
+    {%- else -%}
+      {{ 'products.product.sold_out' | t | default: 'Sold Out' }}
+    {%- endif -%}
+  </button>
+</div>
+
+{% stylesheet %}
+  .aura-sticky-atc-bar {
+    gap: 1rem;
+  }
+
+  .aura-sticky-atc__info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .aura-sticky-atc__thumb {
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .aura-sticky-atc__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .aura-sticky-atc__title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .aura-sticky-atc__price {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--aura-color-accent);
+  }
+
+  .aura-sticky-atc__btn {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+{% endstylesheet %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const stickyBar = document.getElementById('AuraStickyAtcBar');
+    const mainSubmit = document.querySelector('.product-form__submit, [name="add"]');
+    const stickySubmit = document.getElementById('AuraStickyAtcSubmit');
+
+    if (!stickyBar || !mainSubmit) return;
+
+    // Scroll Observer to show sticky ATC bar when main ATC scrolls out of view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+          stickyBar.classList.add('is-visible');
+        } else {
+          stickyBar.classList.remove('is-visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    observer.observe(mainSubmit);
+
+    // Sync sticky button click with main form submission
+    if (stickySubmit) {
+      stickySubmit.addEventListener('click', () => {
+        if (mainSubmit) mainSubmit.click();
+      });
+    }
+  });
+</script>

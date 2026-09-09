@@ -1,0 +1,122 @@
+<div class="aura-values page-width" data-aura-reveal="fade-up">
+  <div class="aura-values__grid">
+    {%- for block in section.blocks -%}
+      <div class="aura-values__item" {{ block.shopify_attributes }}>
+        <div class="aura-values__icon">
+          {%- if block.settings.icon == 'shipping' -%}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+          {%- elsif block.settings.icon == 'returns' -%}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          {%- elsif block.settings.icon == 'eco' -%}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12A10 10 0 0 1 12 2z"></path><path d="M12 6v12"></path><path d="M8 10l8 4"></path></svg>
+          {%- else -%}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          {%- endif -%}
+        </div>
+        <div class="aura-values__text">
+          <h3 class="aura-values__title">{{ block.settings.title | escape }}</h3>
+          <p class="aura-values__desc">{{ block.settings.text | escape }}</p>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .aura-values {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    border-top: 1px solid var(--aura-color-border-light);
+    border-bottom: 1px solid var(--aura-color-border-light);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .aura-values__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+  }
+
+  .aura-values__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .aura-values__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--aura-radius-full);
+    background-color: rgba(79, 70, 229, 0.08);
+    color: var(--aura-color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .aura-values__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 0.2rem 0;
+    color: var(--aura-color-text-primary);
+  }
+
+  .aura-values__desc {
+    font-size: 0.85rem;
+    color: var(--aura-color-text-secondary);
+    margin: 0;
+    line-height: 1.4;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AURA Brand Values",
+  "tag": "section",
+  "class": "section-aura-values",
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Brand Value",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shipping", "label": "Shipping Truck" },
+            { "value": "returns", "label": "Easy Returns" },
+            { "value": "eco", "label": "Sustainability / Leaf" },
+            { "value": "shield", "label": "Quality Guarantee" }
+          ],
+          "default": "shipping"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Express Delivery"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description",
+          "default": "Free worldwide shipping on all orders over $100."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AURA Brand Values",
+      "blocks": [
+        { "type": "value", "settings": { "icon": "shipping", "title": "Express Delivery", "text": "Complimentary shipping on orders over $100." } },
+        { "type": "value", "settings": { "icon": "returns", "title": "30-Day Returns", "text": "Hassle-free return policy with prepaid shipping labels." } },
+        { "type": "value", "settings": { "icon": "eco", "title": "Conscious Craft", "text": "Sustainably sourced organic fabrics and recyclable packaging." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,67 @@
+{% doc %}
+  Dynamic Free Shipping Progress Bar component for Cart Drawer and Cart Page.
+{% enddoc %}
+
+{%- liquid
+  assign free_shipping_threshold = settings.free_shipping_threshold | default: 100 | times: 100
+  assign cart_total = cart.total_price
+  assign amount_remaining = free_shipping_threshold | minus: cart_total
+  
+  if cart_total >= free_shipping_threshold
+    assign percentage = 100
+  else
+    assign percentage = cart_total | times: 100.0 | divided_by: free_shipping_threshold | round
+  endif
+-%}
+
+<div class="aura-free-shipping" id="AuraFreeShippingBar" data-threshold="{{ free_shipping_threshold }}">
+  <div class="aura-free-shipping__text">
+    {%- if cart_total >= free_shipping_threshold -%}
+      <span class="aura-free-shipping__unlocked">
+        🎉 <strong>Congratulations!</strong> You unlocked Free Standard Shipping!
+      </span>
+    {%- else -%}
+      <span>
+        Add <strong>{{ amount_remaining | money }}</strong> more to unlock <strong>Free Shipping</strong>
+      </span>
+    {%- endif -%}
+  </div>
+  <div class="aura-free-shipping__track">
+    <div class="aura-free-shipping__progress" style="width: {{ percentage }}%;"></div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .aura-free-shipping {
+    background: var(--aura-color-bg-primary);
+    border-radius: var(--aura-radius-sm);
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .aura-free-shipping__text {
+    font-size: 0.85rem;
+    color: var(--aura-color-text-primary);
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .aura-free-shipping__unlocked {
+    color: var(--aura-color-success);
+  }
+
+  .aura-free-shipping__track {
+    height: 6px;
+    background: var(--aura-color-border);
+    border-radius: var(--aura-radius-full);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .aura-free-shipping__progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--aura-color-accent) 0%, #6366F1 100%);
+    border-radius: var(--aura-radius-full);
+    transition: width 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+{% endstylesheet %}

@@ -1,0 +1,116 @@
+{% doc %}
+  Accessible Size Guide modal dialog snippet displaying apparel sizing conversion charts and body measurement guide.
+{% enddoc %}
+
+<dialog id="AuraSizeGuideModal" class="aura-modal">
+  <div class="aura-modal__overlay" data-aura-modal-close></div>
+  <div class="aura-modal__container" style="max-width: 650px;">
+    <button type="button" class="aura-modal__close-btn" data-aura-modal-close aria-label="Close Size Guide">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <div class="aura-size-guide__content">
+      <h2 class="aura-size-guide__title">Size Guide</h2>
+      <p class="aura-size-guide__subtitle">Find your perfect fit. All measurements are in inches unless specified.</p>
+
+      <table class="aura-size-guide__table">
+        <thead>
+          <tr>
+            <th>Size</th>
+            <th>Bust / Chest</th>
+            <th>Waist</th>
+            <th>Hips</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>XS (0-2)</td><td>31" - 33"</td><td>24" - 26"</td><td>34" - 36"</td></tr>
+          <tr><td>S (4-6)</td><td>33" - 35"</td><td>26" - 28"</td><td>36" - 38"</td></tr>
+          <tr><td>M (8-10)</td><td>35" - 37"</td><td>28" - 30"</td><td>38" - 40"</td></tr>
+          <tr><td>L (12-14)</td><td>37" - 40"</td><td>30" - 33"</td><td>40" - 43"</td></tr>
+          <tr><td>XL (16)</td><td>40" - 43"</td><td>33" - 36"</td><td>43" - 46"</td></tr>
+        </tbody>
+      </table>
+
+      <div class="aura-size-guide__tips">
+        <h4>How to measure:</h4>
+        <ul>
+          <li><strong>Chest:</strong> Measure around the fullest part of your chest under your arms.</li>
+          <li><strong>Waist:</strong> Measure around your natural waistline, keeping the tape comfortable.</li>
+          <li><strong>Hips:</strong> Measure around the fullest part of your body at the top of your leg.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+{% stylesheet %}
+  .aura-size-guide__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .aura-size-guide__subtitle {
+    font-size: 0.9rem;
+    color: var(--aura-color-text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .aura-size-guide__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.88rem;
+  }
+
+  .aura-size-guide__table th, .aura-size-guide__table td {
+    padding: 0.75rem 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--aura-color-border-light);
+  }
+
+  .aura-size-guide__table th {
+    font-weight: 700;
+    background-color: var(--aura-color-bg-primary);
+  }
+
+  .aura-size-guide__tips {
+    background: var(--aura-color-bg-primary);
+    padding: 1rem;
+    border-radius: var(--aura-radius-sm);
+    font-size: 0.85rem;
+  }
+
+  .aura-size-guide__tips h4 {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .aura-size-guide__tips ul {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+{% endstylesheet %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('AuraSizeGuideModal');
+
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-aura-open-size-guide]')) {
+        e.preventDefault();
+        if (modal && window.auraAnimateModal) {
+          window.auraAnimateModal(modal, true);
+        } else if (modal) {
+          modal.style.display = 'flex';
+        }
+      }
+
+      if (e.target.closest('#AuraSizeGuideModal [data-aura-modal-close]')) {
+        if (modal && window.auraAnimateModal) {
+          window.auraAnimateModal(modal, false);
+        } else if (modal) {
+          modal.style.display = 'none';
+        }
+      }
+    });
+  });
+</script>

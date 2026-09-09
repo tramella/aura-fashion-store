@@ -1,0 +1,158 @@
+<div class="aura-luneva-header-wrapper relative w-full bg-white border-b border-gray-100 z-50">
+  <header class="aura-luneva-header page-width flex items-center justify-between py-5">
+    <!-- Left Section: Mobile Hamburger Toggle & Brand Logo -->
+    <div class="aura-header-left flex items-center gap-4 flex-1">
+      <button type="button" class="aura-mobile-hamburger-btn md:hidden text-gray-900 focus:outline-none" id="AuraMobileMenuOpen" aria-label="Open navigation menu">
+        <svg width="22" height="18" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="0" y1="2" x2="24" y2="2"></line><line x1="0" y1="9" x2="24" y2="9"></line><line x1="0" y1="16" x2="24" y2="16"></line></svg>
+      </button>
+      <a href="{{ routes.root_url }}" class="aura-brand-logo text-4xl lg:text-5xl font-serif italic font-bold tracking-tight text-gray-900 no-underline">
+        {{ section.settings.logo_text | default: 'AURA' }}
+      </a>
+    </div>
+
+    <!-- Center Mega Menu Navigation Links (Desktop) -->
+    {% render 'header-mega-menu' %}
+
+    <!-- Right Icons: Wishlist ♡, Account 👤, Shopping Bag 🛍️ -->
+    <div class="aura-header-right flex items-center justify-end gap-6 flex-1 text-gray-900">
+      <a href="/pages/wishlist" class="aura-icon-link hover:opacity-75 transition-opacity" aria-label="Wishlist">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      </a>
+
+      <a href="{{ routes.account_url }}" class="aura-icon-link hover:opacity-75 transition-opacity" aria-label="Account">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+
+      <a href="{{ routes.cart_url }}" class="aura-icon-link aura-cart-link relative hover:opacity-75 transition-opacity" aria-label="Cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        <span class="aura-cart-badge-pill absolute -top-2 -right-2.5 bg-black text-white rounded-full w-5 h-5 text-[11px] font-extrabold flex items-center justify-center leading-none shadow-sm z-10">{{ cart.item_count | default: 0 }}</span>
+      </a>
+    </div>
+  </header>
+</div>
+
+<!-- Mobile Navigation Drawer -->
+<div class="aura-mobile-drawer fixed inset-0 z-50 invisible opacity-0 transition-all duration-300" id="AuraMobileDrawer" aria-hidden="true">
+  <div class="aura-mobile-drawer__overlay absolute inset-0 bg-gray-900/60 backdrop-blur-sm" id="AuraMobileDrawerOverlay"></div>
+  <div class="aura-mobile-drawer__content absolute top-0 left-0 w-4/5 max-w-xs h-full bg-white p-6 flex flex-col justify-between shadow-2xl -translate-x-full transition-transform duration-300">
+    <div class="aura-mobile-drawer__header flex items-center justify-between pb-4 border-b border-gray-200">
+      <a href="{{ routes.root_url }}" class="aura-brand-logo text-2xl font-serif italic font-bold text-gray-900">{{ section.settings.logo_text | default: 'AURA' }}</a>
+      <button type="button" class="aura-mobile-drawer__close text-2xl text-gray-900" id="AuraMobileMenuClose" aria-label="Close menu">&times;</button>
+    </div>
+
+    {%- assign main_menu = section.settings.menu | default: 'main-menu' -%}
+    <nav class="aura-mobile-drawer__nav flex flex-col gap-5 mt-6 mb-auto">
+      {%- if linklists[main_menu].links.size > 0 -%}
+        {%- for link in linklists[main_menu].links -%}
+          {%- assign link_title_downcase = link.title | downcase -%}
+          <a
+            href="{{ link.url }}"
+            class="aura-mobile-drawer__link text-lg font-bold {% if link_title_downcase == 'sale' %}text-red-500{% else %}text-gray-900{% endif %}"
+          >
+            {{ link.title | escape }}
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        <a href="{{ routes.all_products_collection_url }}" class="aura-mobile-drawer__link text-lg font-bold text-gray-900">New Arrivals</a>
+        <a href="{{ routes.collections_url }}/women" class="aura-mobile-drawer__link text-lg font-bold text-gray-900">Women</a>
+        <a href="{{ routes.collections_url }}/men" class="aura-mobile-drawer__link text-lg font-bold text-gray-900">Men</a>
+        <a href="{{ routes.collections_url }}/kids" class="aura-mobile-drawer__link text-lg font-bold text-gray-900">Kids</a>
+        <a href="{{ routes.collections_url }}/sale" class="aura-mobile-drawer__link text-lg font-bold text-red-500">Sale</a>
+        <a href="{{ routes.all_products_collection_url }}" class="aura-mobile-drawer__link text-lg font-bold text-gray-900">Collections</a>
+      {%- endif -%}
+    </nav>
+
+    <div class="aura-mobile-drawer__footer pt-4 border-t border-gray-200 flex gap-6 text-sm font-semibold text-gray-500">
+      <a href="{{ routes.account_url }}" class="aura-mobile-drawer__sublink hover:text-gray-900">My Account</a>
+      <a href="/pages/wishlist" class="aura-mobile-drawer__sublink hover:text-gray-900">Wishlist</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const openBtn = document.getElementById('AuraMobileMenuOpen');
+    const closeBtn = document.getElementById('AuraMobileMenuClose');
+    const overlay = document.getElementById('AuraMobileDrawerOverlay');
+    const drawer = document.getElementById('AuraMobileDrawer');
+
+    function openDrawer() {
+      drawer?.classList.add('is-open', '!visible', '!opacity-100');
+      drawer?.querySelector('.aura-mobile-drawer__content')?.classList.remove('-translate-x-full');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      drawer?.classList.remove('is-open', '!visible', '!opacity-100');
+      drawer?.querySelector('.aura-mobile-drawer__content')?.classList.add('-translate-x-full');
+      document.body.style.overflow = '';
+    }
+
+    openBtn?.addEventListener('click', openDrawer);
+    closeBtn?.addEventListener('click', closeDrawer);
+    overlay?.addEventListener('click', closeDrawer);
+  });
+</script>
+
+{% stylesheet %}
+  .aura-luneva-header-wrapper {
+    position: relative !important;
+  }
+
+  .aura-brand-logo {
+    font-family: var(--aura-font-serif-italic);
+    font-size: clamp(2.4rem, 4.5vw, 3.4rem) !important;
+  }
+
+  .aura-cart-badge-pill {
+    position: absolute;
+    top: -8px !important;
+    right: -10px !important;
+    background-color: #0F0F11 !important;
+    color: #FFFFFF !important;
+    border-radius: 9999px !important;
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (min-width: 990px) {
+    .aura-mobile-hamburger-btn {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 989px) {
+    .aura-header-center {
+      display: none !important;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Lunéva Header",
+  "tag": "section",
+  "class": "section-luneva-header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "AURA"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation Menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

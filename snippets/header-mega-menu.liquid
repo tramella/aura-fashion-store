@@ -1,0 +1,273 @@
+{% comment %}
+  AURA / Dawn OS 2.0 Custom Mega Menu Component
+  Rendered in header navigation bar with multi-column links and 2x2 promo image grid
+{% endcomment %}
+
+{%- assign main_menu = section.settings.menu | default: 'main-menu' -%}
+
+<nav class="aura-header-center small-hide flex items-center justify-center gap-8 lg:gap-12 xl:gap-14">
+  {%- if linklists[main_menu].links.size > 0 -%}
+    {%- for link in linklists[main_menu].links -%}
+      {%- assign link_title_downcase = link.title | downcase -%}
+      {%- assign has_dropdown = false -%}
+      {%- if link.links.size > 0 -%}
+        {%- assign has_dropdown = true -%}
+      {%- endif -%}
+
+      <div class="aura-menu-item-wrap{% if has_dropdown %} has-mega-menu{% endif %}">
+        <a
+          href="{{ link.url }}"
+          class="aura-nav-link{% if link.active %} is-active{% endif %}{% if link_title_downcase == 'sale' %} aura-nav-link--sale{% endif %}"
+        >
+          <span>{{ link.title | escape }}</span>
+          {%- if has_dropdown -%}
+            <svg class="aura-menu-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 1L5 5L9 1"></path></svg>
+          {%- endif -%}
+        </a>
+
+        {%- if has_dropdown -%}
+          <!-- Mega Menu Dropdown Panel -->
+          <div class="aura-mega-menu">
+            <div class="aura-mega-menu__container page-width">
+              <!-- Left Multi-Column Sub-Category Link Grid -->
+              <div class="aura-mega-menu__columns">
+                {%- for childlink in link.links -%}
+                  <div class="aura-mega-column">
+                    <a href="{{ childlink.url }}" class="aura-mega-title">{{ childlink.title | escape }}</a>
+                    {%- if childlink.links.size > 0 -%}
+                      <ul class="aura-mega-list">
+                        {%- for grand_child_link in childlink.links -%}
+                          <li>
+                            <a href="{{ grand_child_link.url }}" class="aura-mega-item">{{ grand_child_link.title | escape }}</a>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    {%- endif -%}
+                  </div>
+                {%- endfor -%}
+              </div>
+
+              <!-- Right Side 2x2 Featured Promo Image Grid -->
+              <div class="aura-mega-menu__promo-grid">
+                <div class="aura-mega-promo-grid-wrap">
+                  <!-- Promo Image 1 -->
+                  <a href="{{ section.settings.promo_link_1 | default: routes.all_products_collection_url }}" class="aura-mega-promo-item">
+                    {%- if section.settings.promo_image_1 != blank -%}
+                      <img src="{{ section.settings.promo_image_1 | image_url: width: 300 }}" alt="Promo 1" loading="lazy" width="300" height="300">
+                    {%- else -%}
+                      {{ 'lifestyle-1' | placeholder_svg_tag: 'aura-mega-promo-placeholder' }}
+                    {%- endif -%}
+                  </a>
+
+                  <!-- Promo Image 2 -->
+                  <a href="{{ section.settings.promo_link_2 | default: routes.all_products_collection_url }}" class="aura-mega-promo-item">
+                    {%- if section.settings.promo_image_2 != blank -%}
+                      <img src="{{ section.settings.promo_image_2 | image_url: width: 300 }}" alt="Promo 2" loading="lazy" width="300" height="300">
+                    {%- else -%}
+                      {{ 'lifestyle-2' | placeholder_svg_tag: 'aura-mega-promo-placeholder' }}
+                    {%- endif -%}
+                  </a>
+
+                  <!-- Promo Image 3 -->
+                  <a href="{{ section.settings.promo_link_3 | default: routes.all_products_collection_url }}" class="aura-mega-promo-item">
+                    {%- if section.settings.promo_image_3 != blank -%}
+                      <img src="{{ section.settings.promo_image_3 | image_url: width: 300 }}" alt="Promo 3" loading="lazy" width="300" height="300">
+                    {%- else -%}
+                      {{ 'collection-1' | placeholder_svg_tag: 'aura-mega-promo-placeholder' }}
+                    {%- endif -%}
+                  </a>
+
+                  <!-- Promo Image 4 -->
+                  <a href="{{ section.settings.promo_link_4 | default: routes.all_products_collection_url }}" class="aura-mega-promo-item">
+                    {%- if section.settings.promo_image_4 != blank -%}
+                      <img src="{{ section.settings.promo_image_4 | image_url: width: 300 }}" alt="Promo 4" loading="lazy" width="300" height="300">
+                    {%- else -%}
+                      {{ 'product-apparel-1' | placeholder_svg_tag: 'aura-mega-promo-placeholder' }}
+                    {%- endif -%}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  {%- endif -%}
+</nav>
+
+<style>
+  .aura-header-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem !important;
+  }
+
+  @media (min-width: 1200px) {
+    .aura-header-center {
+      gap: 3.5rem !important;
+    }
+  }
+
+  .aura-menu-item-wrap {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .aura-nav-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    gap: 6px !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+  }
+
+  .aura-menu-arrow {
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+    margin-left: 2px !important;
+    transition: transform 200ms ease;
+  }
+
+  .aura-menu-item-wrap:hover .aura-menu-arrow {
+    transform: rotate(180deg);
+  }
+
+  /* Full Width Mega Menu Dropdown Panel attached to header bottom line */
+  .aura-mega-menu {
+    position: absolute;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #FFFFFF;
+    border-top: 1px solid #E5E7EB;
+    border-bottom: 1px solid #E5E7EB;
+    border-radius: 0 !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0) !important;
+    transition: opacity 250ms ease, visibility 250ms ease;
+    z-index: 100;
+    pointer-events: none;
+    margin: 0 !important;
+  }
+
+  /* Invisible hover bridge to prevent hover loss when moving mouse downwards */
+  .aura-mega-menu::before {
+    content: '';
+    position: absolute;
+    top: -24px;
+    left: 0;
+    width: 100%;
+    height: 24px;
+    background: transparent;
+  }
+
+  .aura-menu-item-wrap:hover .aura-mega-menu,
+  .aura-mega-menu:hover {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .aura-mega-menu__container {
+    display: grid;
+    grid-template-columns: 2.8fr 1.2fr;
+    gap: 2.5rem;
+    padding: 2.5rem;
+    box-sizing: border-box;
+  }
+
+  /* Left Multi-Column Links */
+  .aura-mega-menu__columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem 2rem;
+  }
+
+  .aura-mega-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .aura-mega-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #0F0F11;
+    text-transform: none;
+    display: block;
+    margin-bottom: 0.85rem;
+    text-decoration: none;
+  }
+
+  .aura-mega-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .aura-mega-item {
+    font-size: 0.88rem;
+    color: #6B7280;
+    text-decoration: none;
+    transition: color 150ms ease, transform 150ms ease;
+    display: inline-block;
+  }
+
+  .aura-mega-item:hover {
+    color: #0F0F11;
+    transform: translateX(3px);
+  }
+
+  /* Right Side 2x2 Promo Grid */
+  .aura-mega-menu__promo-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .aura-mega-promo-grid-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .aura-mega-promo-item {
+    display: block;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #F3F4F6;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .aura-mega-promo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 300ms ease;
+  }
+
+  .aura-mega-promo-item:hover img {
+    transform: scale(1.08);
+  }
+
+  .aura-mega-promo-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.6;
+  }
+</style>

@@ -1,0 +1,106 @@
+/* AURA Store — Lunéva Responsive Desktop & Mobile Styling */
+
+body {
+  background-color: var(--aura-color-bg) !important;
+  color: var(--aura-color-text-main) !important;
+  font-family: var(--aura-font-sans) !important;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Mixed Typography: High Fashion Italic Serif */
+.aura-serif-italic, .aura-font-serif {
+  font-family: var(--aura-font-serif-italic) !important;
+  font-style: italic !important;
+  font-weight: 600 !important;
+  letter-spacing: 0em !important;
+}
+
+/* Header Reset */
+.header-wrapper, .site-header, .header {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Buttons */
+.button, .aura-btn, .button--primary, button.product-form__submit {
+  border-radius: var(--aura-radius-pill) !important;
+  font-family: var(--aura-font-sans) !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  padding: 14px 32px !important;
+  background-color: #0F0F11 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  -webkit-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  -moz-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  -ms-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  -o-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.button--white, .aura-btn--white {
+  background-color: #FFFFFF !important;
+  color: #0F0F11 !important;
+  box-shadow: var(--aura-shadow-pill) !important;
+}
+
+.button--white:hover, .aura-btn--white:hover {
+  background-color: #F3F4F6 !important;
+  transform: translateY(-2px) !important;
+}
+
+@media (max-width: 768px) {
+  .button, .aura-btn, .button--primary, button.product-form__submit {
+    font-size: 0.82rem !important;
+    padding: 10px 20px !important;
+  }
+}
+
+/* Laptop & Desktop Enhancements (>= 990px) */
+@media (min-width: 990px) {
+  .page-width {
+    width: 80% !important;
+    max-width: 80% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  h1, .h1 {
+    font-size: var(--aura-fs-hero-title) !important;
+  }
+
+  h2, .h2 {
+    font-size: var(--aura-fs-sec-title) !important;
+  }
+}
+
+/* Mobile Optimizations (< 768px) */
+@media (max-width: 768px) {
+  .page-width {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .grid, .aura-find-look__grid, .aura-bento-grid {
+    gap: 12px !important;
+  }
+}
+
+/* Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,147 @@
+<div class="aura-find-look page-width" data-aura-reveal="fade-up">
+  <div class="aura-find-look__header">
+    <h2 class="aura-find-look__title">{{ section.settings.title | default: 'Find Your Look' }}</h2>
+  </div>
+
+  <div class="aura-find-look__grid">
+    <div class="aura-find-look-card">
+      <a href="/collections/women" class="aura-find-look-card__inner">
+        <div class="aura-find-look-card__media">
+          {%- if section.settings.image_women != blank -%}
+            <img src="{{ section.settings.image_women | image_url: width: 600 }}" alt="Women" loading="lazy" width="600" height="800">
+          {%- else -%}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+        <span class="aura-find-look-card__badge">Women</span>
+      </a>
+    </div>
+
+    <div class="aura-find-look-card">
+      <a href="/collections/men" class="aura-find-look-card__inner">
+        <div class="aura-find-look-card__media">
+          {%- if section.settings.image_men != blank -%}
+            <img src="{{ section.settings.image_men | image_url: width: 600 }}" alt="Men" loading="lazy" width="600" height="800">
+          {%- else -%}
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+        <span class="aura-find-look-card__badge">Men</span>
+      </a>
+    </div>
+
+    <div class="aura-find-look-card">
+      <a href="/collections/kids" class="aura-find-look-card__inner">
+        <div class="aura-find-look-card__media">
+          {%- if section.settings.image_kids != blank -%}
+            <img src="{{ section.settings.image_kids | image_url: width: 600 }}" alt="Kids" loading="lazy" width="600" height="800">
+          {%- else -%}
+            {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+        <span class="aura-find-look-card__badge">Kids</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .aura-find-look {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+  }
+
+  .aura-find-look__header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .aura-find-look__title {
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .aura-find-look__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .aura-find-look-card__inner {
+    display: block;
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    text-decoration: none;
+    background-color: #E8E5DF;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  }
+
+  .aura-find-look-card__media {
+    width: 100%;
+    height: 100%;
+  }
+
+  .aura-find-look-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 400ms ease;
+  }
+
+  .aura-find-look-card__inner:hover .aura-find-look-card__media img {
+    transform: scale(1.05);
+  }
+
+  .aura-find-look-card__badge {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: #FFFFFF;
+    color: #0F0F11;
+    padding: 8px 22px;
+    border-radius: 9999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    z-index: 3;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Lunéva Find Your Look",
+  "tag": "section",
+  "class": "section-luneva-find-look",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Find Your Look"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_women",
+      "label": "Women Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_men",
+      "label": "Men Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_kids",
+      "label": "Kids Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lunéva Find Your Look"
+    }
+  ]
+}
+{% endschema %}

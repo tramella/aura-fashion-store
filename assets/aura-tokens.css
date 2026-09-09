@@ -1,0 +1,46 @@
+/* AURA Store — Lunéva Responsive Design Tokens */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Color Palette */
+  --aura-color-bg: #FFFFFF;
+  --aura-color-dark: #0F0F11;
+  --aura-color-surface: #F9F9FB;
+  --aura-color-text-main: #0F0F11;
+  --aura-color-text-muted: #6B7280;
+  --aura-color-border: #E5E7EB;
+
+  /* Typography */
+  --aura-font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --aura-font-serif-italic: 'Cormorant Garamond', Georgia, serif;
+
+  /* Radii */
+  --aura-radius-card: 24px;
+  --aura-radius-pill: 9999px;
+  --aura-radius-sm: 12px;
+
+  /* Desktop Font Sizes */
+  --aura-fs-hero-title: clamp(3rem, 5.5vw, 5rem);
+  --aura-fs-sec-title: clamp(2.2rem, 4vw, 3.5rem);
+  --aura-fs-card-title: 1.15rem;
+  --aura-fs-price: 1.1rem;
+  --aura-fs-nav: 1.05rem;
+  --aura-fs-body: 1.05rem;
+
+  /* Shadows */
+  --aura-shadow-card: 0 10px 30px rgba(0, 0, 0, 0.05);
+  --aura-shadow-pill: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* Mobile Scales */
+@media (max-width: 768px) {
+  :root {
+    --aura-radius-card: 16px;
+    --aura-fs-hero-title: clamp(1.8rem, 6vw, 2.6rem);
+    --aura-fs-sec-title: clamp(1.6rem, 5vw, 2.2rem);
+    --aura-fs-card-title: 0.92rem;
+    --aura-fs-price: 0.88rem;
+    --aura-fs-nav: 0.9rem;
+    --aura-fs-body: 0.9rem;
+  }
+}

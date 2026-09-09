@@ -1,0 +1,177 @@
+{% doc %}
+  Accessible Quick View modal template rendering product image carousel, variant picker, quantity input, and instant Ajax Add to Cart button.
+{% enddoc %}
+
+<dialog id="AuraQuickViewModal" class="aura-modal aura-quick-view-modal">
+  <div class="aura-modal__overlay" data-aura-modal-close></div>
+  <div class="aura-modal__container">
+    <button type="button" class="aura-modal__close-btn" data-aura-modal-close aria-label="{{ 'accessibility.close' | t | default: 'Close' }}">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <div id="AuraQuickViewContent" class="aura-quick-view__body">
+      <!-- Dynamically populated via JS -->
+      <div class="aura-quick-view__loading">
+        <div class="aura-spinner"></div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+{% stylesheet %}
+  .aura-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: var(--aura-z-modal);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    border: none;
+    background: transparent;
+  }
+
+  .aura-modal__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 15, 17, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .aura-modal__container {
+    position: relative;
+    z-index: 2;
+    background: #FFFFFF;
+    border-radius: var(--aura-radius-lg);
+    width: 100%;
+    max-width: 820px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--aura-shadow-floating);
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
+
+  .aura-modal__close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--aura-color-bg-primary);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background-color var(--aura-transition-fast);
+  }
+
+  .aura-modal__close-btn:hover {
+    background: var(--aura-color-border);
+  }
+
+  .aura-quick-view__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 750px) {
+    .aura-quick-view__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .aura-quick-view__gallery {
+    border-radius: var(--aura-radius-md);
+    overflow: hidden;
+    background-color: var(--aura-color-bg-primary);
+  }
+
+  .aura-quick-view__gallery img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    display: block;
+  }
+
+  .aura-quick-view__details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .aura-quick-view__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+
+  }
+
+  .aura-quick-view__price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--aura-color-text-primary);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .aura-quick-view__option-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .aura-quick-view__swatches, .aura-quick-view__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .aura-pill-btn {
+    min-height: 38px;
+    padding: 0.4rem 1rem;
+    border-radius: var(--aura-radius-full);
+    border: 1px solid var(--aura-color-border);
+    background: #FFFFFF;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--aura-transition-fast);
+  }
+
+  .aura-pill-btn.is-selected {
+    background: var(--aura-color-bg-dark);
+    color: #FFFFFF;
+    border-color: var(--aura-color-bg-dark);
+  }
+
+  .aura-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(79, 70, 229, 0.2);
+    border-top-color: var(--aura-color-accent);
+    border-radius: 50%;
+    animation: auraSpin 0.8s linear infinite;
+    margin: 3rem auto;
+  }
+
+  @keyframes auraSpin {
+    to { transform: rotate(360deg); }
+  }
+{% endstylesheet %}

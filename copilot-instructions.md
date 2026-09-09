@@ -1,0 +1,1 @@
+E:/shopify-development/aura-fashion/AGENTS.md
