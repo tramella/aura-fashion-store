@@ -1,0 +1,335 @@
+<div class="aura-account-page page-width py-12 md:py-16">
+  {%- if customer -%}
+    <!-- Customer Welcome Banner (Logged In) -->
+    <div class="aura-account-banner bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-8 md:p-10 text-white mb-10 shadow-xl relative overflow-hidden">
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-semibold tracking-wider uppercase text-amber-300 mb-3">
+            <span>✨</span>
+            <span>AURA VIP Member</span>
+          </div>
+          <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">
+            Welcome back, <span class="aura-serif-italic font-normal text-amber-100">{{ customer.first_name | default: 'Fashion Connoisseur' }}</span>
+          </h1>
+          <p class="text-gray-400 text-sm mt-1">{{ customer.email }}</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="{{ routes.account_logout_url }}" class="aura-btn bg-white/15 hover:bg-white/25 text-white text-xs uppercase tracking-wider font-semibold py-2.5 px-5 rounded-full transition-all">
+            Sign Out
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unified VIP Customer Portal Navigation Tabs -->
+    <div class="flex items-center gap-2 md:gap-4 mb-8 border-b border-gray-200 overflow-x-auto pb-1">
+      <a href="{{ routes.account_url }}" class="pb-3 border-b-2 border-black font-extrabold text-xs md:text-sm uppercase tracking-wider text-black flex items-center gap-2 whitespace-nowrap">
+        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <span>Orders & Profile</span>
+      </a>
+      <a href="/pages/wishlist" class="pb-3 border-b-2 border-transparent font-bold text-xs md:text-sm uppercase tracking-wider text-gray-400 hover:text-black flex items-center gap-2 transition-all whitespace-nowrap">
+        <svg class="w-4 h-4 text-rose-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <span>Saved Wishlist</span>
+      </a>
+      <a href="{{ routes.account_addresses_url }}" class="pb-3 border-b-2 border-transparent font-bold text-xs md:text-sm uppercase tracking-wider text-gray-400 hover:text-black flex items-center gap-2 transition-all whitespace-nowrap">
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span>Addresses</span>
+      </a>
+    </div>
+
+    <!-- Account Grid Layout: Left = Orders (2/3), Right = Address & Details (1/3) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left 2 Columns: Recent Orders -->
+      <div class="lg:col-span-2 bg-white rounded-3xl border border-gray-200/80 p-6 md:p-8 shadow-sm">
+        <div class="flex items-center justify-between border-b border-gray-100 pb-5 mb-6">
+          <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            <span>Order History</span>
+          </h2>
+          {%- if customer.orders.size > 0 -%}
+            <span class="text-xs font-semibold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+              {{ customer.orders.size }}
+              {% if customer.orders.size == 1 %}order{% else %}orders{% endif %}
+            </span>
+          {%- endif -%}
+        </div>
+
+        {%- if customer.orders.size > 0 -%}
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-600">
+              <thead>
+                <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  <th class="pb-3">Order</th>
+                  <th class="pb-3">Date</th>
+                  <th class="pb-3">Payment</th>
+                  <th class="pb-3">Fulfillment</th>
+                  <th class="pb-3 text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 font-medium">
+                {%- for order in customer.orders -%}
+                  <tr class="hover:bg-gray-50/50 transition-colors">
+                    <td class="py-4 font-bold text-gray-900">
+                      <a href="{{ order.customer_url }}" class="hover:underline">{{ order.name }}</a>
+                    </td>
+                    <td class="py-4 text-gray-500">{{ order.created_at | time_tag: format: 'date' }}</td>
+                    <td class="py-4">
+                      <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-gray-100 text-gray-800">
+                        {{ order.financial_status_label }}
+                      </span>
+                    </td>
+                    <td class="py-4">
+                      <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700">
+                        {{ order.fulfillment_status_label }}
+                      </span>
+                    </td>
+                    <td class="py-4 text-right font-extrabold text-gray-900">{{ order.total_net_amount | money_with_currency }}</td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+          </div>
+        {%- else -%}
+          <div class="text-center py-12 bg-gray-50/50 rounded-2xl border border-gray-100">
+            <div class="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-400 mx-auto mb-3">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+            <h3 class="text-base font-bold text-gray-900 mb-1">No Orders Yet</h3>
+            <p class="text-xs text-gray-500 max-w-xs mx-auto mb-5">You haven't placed any orders with us yet. Explore our latest collections today.</p>
+            <a href="{{ routes.all_products_collection_url }}" class="aura-btn aura-btn--primary text-xs uppercase font-bold py-2.5 px-5">
+              Start Shopping
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Right 1 Column: Account Details & Primary Address -->
+      <div class="space-y-6">
+        <div class="bg-white rounded-3xl border border-gray-200/80 p-6 md:p-7 shadow-sm">
+          <h2 class="text-lg font-bold text-gray-900 border-b border-gray-100 pb-4 mb-4 flex items-center justify-between">
+            <span>Account Details</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </h2>
+          <div class="space-y-3 text-sm">
+            <div>
+              <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block">Full Name</span>
+              <span class="font-bold text-gray-900">{{ customer.name }}</span>
+            </div>
+            <div>
+              <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block">Email Address</span>
+              <span class="font-bold text-gray-900">{{ customer.email }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-gray-200/80 p-6 md:p-7 shadow-sm">
+          <h2 class="text-lg font-bold text-gray-900 border-b border-gray-100 pb-4 mb-4 flex items-center justify-between">
+            <span>Primary Address</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          </h2>
+
+          {%- if customer.default_address -%}
+            <div class="text-sm text-gray-600 leading-relaxed mb-4">
+              <p class="font-bold text-gray-900">{{ customer.default_address.name }}</p>
+              <p>{{ customer.default_address.address1 }}</p>
+              {%- if customer.default_address.address2 != blank -%}
+                <p>{{ customer.default_address.address2 }}</p>
+              {%- endif -%}
+              <p>{{ customer.default_address.city }}, {{ customer.default_address.province_code }} {{ customer.default_address.zip }}</p>
+              <p>{{ customer.default_address.country }}</p>
+            </div>
+          {%- else -%}
+            <p class="text-xs text-gray-400 mb-4">No default address on file.</p>
+          {%- endif -%}
+
+          <a href="{{ routes.account_addresses_url }}" class="inline-flex items-center text-xs font-bold text-black hover:underline gap-1">
+            <span>Manage Addresses ({{ customer.addresses_count | default: 0 }})</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  {%- else -%}
+    <!-- Non-Logged-In Guest State: Sign In & Register Form Tabs -->
+    <div class="aura-account-auth-container max-w-lg mx-auto">
+      <div class="bg-white rounded-3xl border border-gray-200/80 p-8 md:p-10 shadow-xl">
+        <!-- Auth Tabs -->
+        <div class="flex items-center justify-center gap-6 border-b border-gray-100 pb-5 mb-8">
+          <button
+            type="button"
+            id="AuraAuthTabSignIn"
+            class="text-lg font-extrabold pb-2 border-b-2 border-black text-black transition-all"
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            id="AuraAuthTabRegister"
+            class="text-lg font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-black transition-all"
+          >
+            Create Account
+          </button>
+        </div>
+
+        <!-- Sign In Form Panel -->
+        <div id="AuraSignInPanel" class="space-y-5">
+          <div class="text-center mb-6">
+            <h2 class="text-2xl font-extrabold text-gray-900 tracking-tight">
+              <span>Sign In to</span>
+              <span class="aura-serif-italic font-normal">AURA</span>
+            </h2>
+            <p class="text-xs text-gray-500 mt-1">Access your order history, saved addresses, and VIP perks.</p>
+          </div>
+
+          {%- form 'customer_login', class: 'space-y-4' -%}
+            {{ form.errors | default_errors }}
+
+            <div>
+              <label for="AccountCustomerEmail" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Email Address</label>
+              <input
+                type="email"
+                name="customer[email]"
+                id="AccountCustomerEmail"
+                autocomplete="email"
+                required
+                placeholder="name@example.com"
+                class="w-full px-4 py-3 rounded-full border border-gray-300 text-sm focus:outline-none focus:border-black transition-colors"
+              >
+            </div>
+
+            <div>
+              <label for="AccountCustomerPassword" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Password</label>
+              <input
+                type="password"
+                name="customer[password]"
+                id="AccountCustomerPassword"
+                autocomplete="current-password"
+                required
+                placeholder="••••••••"
+                class="w-full px-4 py-3 rounded-full border border-gray-300 text-sm focus:outline-none focus:border-black transition-colors"
+              >
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-3.5 bg-black text-white text-xs font-extrabold uppercase tracking-widest rounded-full hover:bg-gray-800 transition-all shadow-md mt-2"
+            >
+              Sign In
+            </button>
+          {%- endform -%}
+        </div>
+
+        <!-- Register Form Panel -->
+        <div id="AuraRegisterPanel" class="space-y-5 hidden">
+          <div class="text-center mb-6">
+            <h2 class="text-2xl font-extrabold text-gray-900 tracking-tight">
+              <span>Join</span>
+              <span class="aura-serif-italic font-normal">AURA VIP</span>
+            </h2>
+            <p class="text-xs text-gray-500 mt-1">Create an account to save your favorite styles and track orders.</p>
+          </div>
+
+          {%- form 'create_customer', class: 'space-y-4' -%}
+            {{ form.errors | default_errors }}
+
+            <div>
+              <label for="AccountFirstName" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">First Name</label>
+              <input
+                type="text"
+                name="customer[first_name]"
+                id="AccountFirstName"
+                placeholder="Jane"
+                class="w-full px-4 py-3 rounded-full border border-gray-300 text-sm focus:outline-none focus:border-black transition-colors"
+              >
+            </div>
+
+            <div>
+              <label for="AccountLastName" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Last Name</label>
+              <input
+                type="text"
+                name="customer[last_name]"
+                id="AccountLastName"
+                placeholder="Doe"
+                class="w-full px-4 py-3 rounded-full border border-gray-300 text-sm focus:outline-none focus:border-black transition-colors"
+              >
+            </div>
+
+            <div>
+              <label for="AccountRegEmail" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Email Address</label>
+              <input
+                type="email"
+                name="customer[email]"
+                id="AccountRegEmail"
+                required
+                placeholder="jane@example.com"
+                class="w-full px-4 py-3 rounded-full border border-gray-300 text-sm focus:outline-none focus:border-black transition-colors"
+              >
+            </div>
+
+            <div>
+              <label for="AccountRegPassword" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                name="customer[password]"
+                id="AccountRegPassword"
+                required
+                placeholder="••••••••"
+                class="w-full px-4 py-3 rounded-full border border-gray-300 text-sm focus:outline-none focus:border-black transition-colors"
+              >
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-3.5 bg-black text-white text-xs font-extrabold uppercase tracking-widest rounded-full hover:bg-gray-800 transition-all shadow-md mt-2"
+            >
+              Create Account
+            </button>
+          {%- endform -%}
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const tabSignIn = document.getElementById('AuraAuthTabSignIn');
+        const tabRegister = document.getElementById('AuraAuthTabRegister');
+        const panelSignIn = document.getElementById('AuraSignInPanel');
+        const panelRegister = document.getElementById('AuraRegisterPanel');
+
+        tabSignIn?.addEventListener('click', () => {
+          tabSignIn.classList.add('border-black', 'text-black', 'font-extrabold');
+          tabSignIn.classList.remove('border-transparent', 'text-gray-400', 'font-bold');
+          tabRegister.classList.remove('border-black', 'text-black', 'font-extrabold');
+          tabRegister.classList.add('border-transparent', 'text-gray-400', 'font-bold');
+          panelSignIn?.classList.remove('hidden');
+          panelRegister?.classList.add('hidden');
+        });
+
+        tabRegister?.addEventListener('click', () => {
+          tabRegister.classList.add('border-black', 'text-black', 'font-extrabold');
+          tabRegister.classList.remove('border-transparent', 'text-gray-400', 'font-bold');
+          tabSignIn.classList.remove('border-black', 'text-black', 'font-extrabold');
+          tabSignIn.classList.add('border-transparent', 'text-gray-400', 'font-bold');
+          panelRegister?.classList.remove('hidden');
+          panelSignIn?.classList.add('hidden');
+        });
+      });
+    </script>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .aura-account-page {
+    min-height: 65vh;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Aura Account",
+  "tag": "section",
+  "class": "section-aura-account",
+  "settings": []
+}
+{% endschema %}

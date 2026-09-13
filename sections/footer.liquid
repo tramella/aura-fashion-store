@@ -75,7 +75,7 @@
           <svg class="aura-luneva-col-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </button>
         <ul class="aura-luneva-link-list">
-          <li><a href="{{ routes.account_url }}">My Order</a></li>
+          <li><a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}">My Order</a></li>
           <li><a href="/pages/contact">Contact Us</a></li>
           <li><a href="/pages/about">About Lunéva</a></li>
           <li><a href="/pages/faqs">FAQs</a></li>

@@ -32,11 +32,12 @@
     <div class="aura-header-right flex items-center justify-end gap-6 flex-1 text-gray-900">
       <!-- Desktop Only Icons (Wishlist, Account, Cart — Visible on Laptop/Desktop >= 990px) -->
       <div class="aura-header-right-desktop flex items-center gap-6">
-        <a href="/pages/wishlist" class="aura-icon-link hover:opacity-75 transition-opacity" aria-label="Wishlist">
+        <a href="/pages/wishlist" class="aura-icon-link relative hover:opacity-75 transition-opacity" aria-label="Wishlist">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <span class="aura-wishlist-badge-pill absolute -top-2 -right-2.5 bg-rose-500 text-white rounded-full w-5 h-5 text-[11px] font-extrabold flex items-center justify-center leading-none shadow-sm z-10 hidden">0</span>
         </a>
 
-        <a href="{{ routes.account_url }}" class="aura-icon-link hover:opacity-75 transition-opacity" aria-label="Account">
+        <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="aura-icon-link hover:opacity-75 transition-opacity" aria-label="Account">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         </a>
 
@@ -82,34 +83,83 @@
       </button>
     </div>
 
-    <!-- Navigation Links -->
+    <!-- Navigation Links with Multi-Level Dropdowns -->
     {%- assign main_menu = section.settings.menu | default: 'main-menu' -%}
-    <nav class="aura-mobile-drawer__nav flex flex-col gap-4 mt-8 mb-auto overflow-y-auto">
+    <nav class="aura-mobile-drawer__nav flex flex-col gap-2 mt-6 mb-auto overflow-y-auto pr-1">
       {%- if linklists[main_menu].links.size > 0 -%}
         {%- for link in linklists[main_menu].links -%}
           {%- assign link_title_downcase = link.title | downcase -%}
-          <a
-            href="{{ link.url }}"
-            class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium tracking-tight py-2 transition-all duration-200 hover:translate-x-1.5 {% if link_title_downcase == 'sale' %}text-red-500 font-bold{% else %}text-gray-900 hover:text-black{% endif %}"
-          >
-            <span>{{ link.title | escape }}</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-40"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </a>
+          {%- if link.links.size > 0 -%}
+            <!-- Level 1 Parent Category (Clicking toggles dropdown ONLY, does not change page) -->
+            <details class="aura-mobile-accordion group border-b border-gray-100/80 pb-2">
+              <summary class="flex items-center justify-between text-lg font-bold tracking-tight py-2.5 text-gray-900 cursor-pointer list-none select-none hover:text-black transition-colors">
+                <span class="flex-1 {% if link_title_downcase == 'sale' %}text-red-500 font-extrabold{% endif %}">
+                  {{ link.title | escape }}
+                </span>
+                <span class="p-1 rounded-md text-gray-400 group-open:rotate-180 transition-transform duration-300">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+              </summary>
+              <div class="pl-4 pr-2 pt-2 pb-3 flex flex-col gap-2.5 border-l-2 border-gray-200/80 my-1">
+                <!-- Shop All Main Category Link -->
+                <a href="{{ link.url }}" class="text-sm font-extrabold text-black hover:underline py-1 flex items-center justify-between border-b border-gray-100/50 pb-2">
+                  <span>Shop All {{ link.title | escape }}</span>
+                  <span>→</span>
+                </a>
+                
+                {%- for childlink in link.links -%}
+                  {%- if childlink.links.size > 0 -%}
+                    <!-- Level 2 Sub-Category (Clicking toggles sub-dropdown) -->
+                    <details class="aura-mobile-sub-accordion group/sub pt-1">
+                      <summary class="flex items-center justify-between text-xs font-extrabold uppercase tracking-wider text-gray-800 py-1.5 cursor-pointer list-none select-none hover:text-black">
+                        <span class="flex-1">{{ childlink.title | escape }}</span>
+                        <span class="p-0.5 text-gray-400 group-open/sub:rotate-180 transition-transform duration-300">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </span>
+                      </summary>
+                      <div class="pl-3 pt-1.5 pb-1 flex flex-col gap-2 text-xs font-medium text-gray-600">
+                        <a href="{{ childlink.url }}" class="py-1 font-bold text-gray-900 hover:underline block">
+                          Shop All {{ childlink.title | escape }}
+                        </a>
+                        {%- for grandchild in childlink.links -%}
+                          <a href="{{ grandchild.url }}" class="py-1 hover:text-black transition-colors block">
+                            {{ grandchild.title | escape }}
+                          </a>
+                        {%- endfor -%}
+                      </div>
+                    </details>
+                  {%- else -%}
+                    <!-- Level 2 Direct Link -->
+                    <a href="{{ childlink.url }}" class="text-sm font-semibold text-gray-700 hover:text-black transition-colors py-1 block">
+                      {{ childlink.title | escape }}
+                    </a>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </details>
+          {%- else -%}
+            <!-- Single Direct Link (No child items = No right arrow icon) -->
+            <a
+              href="{{ link.url }}"
+              class="aura-mobile-drawer__link flex items-center justify-between text-lg font-bold tracking-tight py-2.5 border-b border-gray-100/80 transition-all duration-200 hover:translate-x-1.5 {% if link_title_downcase == 'sale' %}text-red-500 font-extrabold{% else %}text-gray-900 hover:text-black{% endif %}"
+            >
+              <span>{{ link.title | escape }}</span>
+            </a>
+          {%- endif -%}
         {%- endfor -%}
       {%- else -%}
-        <a href="{{ routes.all_products_collection_url }}" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium text-gray-900 py-2 hover:translate-x-1.5 transition-all"><span>New Arrivals</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
-        <a href="{{ routes.collections_url }}/women" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium text-gray-900 py-2 hover:translate-x-1.5 transition-all"><span>Women</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
-        <a href="{{ routes.collections_url }}/men" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium text-gray-900 py-2 hover:translate-x-1.5 transition-all"><span>Men</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
-        <a href="{{ routes.collections_url }}/kids" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium text-gray-900 py-2 hover:translate-x-1.5 transition-all"><span>Kids</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
-        <a href="{{ routes.collections_url }}/sale" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-bold text-red-500 py-2 hover:translate-x-1.5 transition-all"><span>Sale</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
-        <a href="{{ routes.all_products_collection_url }}" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium text-gray-900 py-2 hover:translate-x-1.5 transition-all"><span>Collections</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+        <!-- Fallback Navigation (No child items = No right arrow icon) -->
+        <a href="{{ routes.all_products_collection_url }}" class="aura-mobile-drawer__link flex items-center justify-between text-lg font-bold text-gray-900 py-2.5 border-b border-gray-100"><span>New Arrivals</span></a>
+        <a href="{{ routes.collections_url }}/women" class="aura-mobile-drawer__link flex items-center justify-between text-lg font-bold text-gray-900 py-2.5 border-b border-gray-100"><span>Women</span></a>
+        <a href="{{ routes.collections_url }}/men" class="aura-mobile-drawer__link flex items-center justify-between text-lg font-bold text-gray-900 py-2.5 border-b border-gray-100"><span>Men</span></a>
+        <a href="{{ routes.collections_url }}/sale" class="aura-mobile-drawer__link flex items-center justify-between text-lg font-bold text-red-500 py-2.5 border-b border-gray-100"><span>Sale</span></a>
       {%- endif -%}
     </nav>
 
     <!-- Drawer Footer -->
     <div class="aura-mobile-drawer__footer pt-5 border-t border-gray-100 flex flex-col gap-3">
       <div class="flex items-center justify-between text-sm font-semibold text-gray-600">
-        <a href="{{ routes.account_url }}" class="hover:text-black transition-colors flex items-center gap-2">
+        <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="hover:text-black transition-colors flex items-center gap-2">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span>My Account</span>
         </a>
@@ -134,7 +184,7 @@
     <span>Wishlist</span>
   </a>
 
-  <a href="{{ routes.account_url }}" class="aura-bottom-nav-item flex flex-col items-center gap-1 text-gray-700 hover:text-gray-900 no-underline text-[11px] font-medium transition-colors">
+  <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="aura-bottom-nav-item flex flex-col items-center gap-1 text-gray-700 hover:text-gray-900 no-underline text-[11px] font-medium transition-colors">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
     <span>Account</span>
   </a>
@@ -205,6 +255,23 @@
     scrollTopBtn?.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    function syncWishlistBadges() {
+      try {
+        const items = JSON.parse(localStorage.getItem('aura_wishlist_items')) || [];
+        document.querySelectorAll('.aura-wishlist-badge-pill').forEach(b => {
+          b.textContent = items.length;
+          if (items.length > 0) {
+            b.classList.remove('hidden');
+          } else {
+            b.classList.add('hidden');
+          }
+        });
+      } catch(e) {}
+    }
+    syncWishlistBadges();
+    window.addEventListener('aura:wishlist:updated', syncWishlistBadges);
+    window.addEventListener('storage', syncWishlistBadges);
   });
 </script>
 

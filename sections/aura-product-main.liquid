@@ -1,0 +1,315 @@
+<div class="aura-product-main-section page-width py-10 md:py-16">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+    
+    <!-- Left Column: Product Media Gallery (Sticky 7 Columns) -->
+    <div class="lg:col-span-7 sticky top-24">
+      <div class="aura-pdp-gallery flex flex-col-reverse md:flex-row gap-4">
+        <!-- Thumbnail Navigation Sidebar -->
+        {%- if product.images.size > 1 -%}
+          <div class="aura-pdp-thumbnails flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto max-h-[550px] scrollbar-none py-1">
+            {%- for image in product.images -%}
+              <button
+                type="button"
+                class="aura-pdp-thumb-btn w-16 h-20 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 {% if forloop.first %}border-black opacity-100{% else %}border-transparent opacity-60 hover:opacity-100{% endif %}"
+                data-target-src="{{ image | image_url: width: 1200 }}"
+              >
+                <img src="{{ image | image_url: width: 200 }}" alt="{{ image.alt | default: product.title | escape }}" width="200" height="250" class="w-full h-full object-cover">
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <!-- Main Featured Image Container -->
+        <div class="aura-pdp-main-media relative flex-1 aspect-[3/4] bg-gray-100 rounded-3xl overflow-hidden border border-gray-100 shadow-sm group">
+          {%- if product.compare_at_price > product.price -%}
+            {%- assign discount = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
+            <span class="absolute top-4 left-4 z-10 bg-black text-white text-[11px] font-extrabold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md">
+              Save {{ discount }}%
+            </span>
+          {%- endif -%}
+
+          {%- if product.featured_image != blank -%}
+            <img
+              id="AuraPdpMainImage"
+              src="{{ product.featured_image | image_url: width: 1200 }}"
+              alt="{{ product.featured_image.alt | default: product.title | escape }}"
+              width="1200"
+              height="1600"
+              class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+            >
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Product Purchase Info (5 Columns) -->
+    <div class="lg:col-span-5 flex flex-col justify-between">
+      <div>
+        <!-- Vendor / Tagline -->
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-widest text-gray-400">
+            {{ product.vendor | default: 'AURA LUNÉVA' }}
+          </span>
+          <div class="flex items-center gap-1 text-amber-500 text-xs font-bold">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            <span class="text-gray-500 font-medium ml-1">(4.9)</span>
+          </div>
+        </div>
+
+        <!-- Product Title -->
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-3 leading-tight">
+          {{ product.title }}
+        </h1>
+
+        <!-- Product Price -->
+        <div class="flex items-baseline gap-3 mb-6">
+          <span class="text-2xl md:text-3xl font-extrabold text-gray-900" id="AuraPdpPrice">
+            {{ product.price | money }}
+          </span>
+          {%- if product.compare_at_price > product.price -%}
+            <span class="text-lg text-gray-400 line-through font-medium">
+              {{ product.compare_at_price | money }}
+            </span>
+          {%- endif -%}
+        </div>
+
+        <!-- Form & Purchase Options -->
+        {%- form 'product', product, id: 'AuraPdpForm', class: 'space-y-6' -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="AuraVariantIdInput">
+
+          <!-- Product Options / Variants -->
+          {%- unless product.has_only_default_variant -%}
+            <div class="space-y-5 border-t border-b border-gray-100 py-5">
+              {%- for option in product.options_with_values -%}
+                {%- assign option_name_downcase = option.name | downcase -%}
+                <div>
+                  <div class="flex items-center justify-between mb-2.5">
+                    <label class="text-xs font-extrabold uppercase tracking-wider text-gray-900">
+                      {{ option.name }}: <span class="font-normal text-gray-500 capitalize" id="AuraSelectedOptionValue-{{ forloop.index }}">{{ option.selected_value }}</span>
+                    </label>
+
+                    {%- if option_name_downcase contains 'size' -%}
+                      <button type="button" class="text-xs text-gray-500 underline hover:text-black font-medium" data-aura-modal-open="AuraSizeGuideModal">
+                        Size Guide
+                      </button>
+                    {%- endif -%}
+                  </div>
+
+                  <!-- Color Option Swatches or Size Option Buttons -->
+                  <div class="flex flex-wrap gap-2.5">
+                    {%- for value in option.values -%}
+                      <button
+                        type="button"
+                        class="aura-variant-btn px-4 py-2 text-xs font-bold rounded-full border transition-all {% if option.selected_value == value %}border-black bg-black text-white shadow-sm{% else %}border-gray-200 bg-white text-gray-800 hover:border-gray-400{% endif %}"
+                        data-option-index="{{ forloop.parentloop.index0 }}"
+                        data-value="{{ value | escape }}"
+                      >
+                        {{ value }}
+                      </button>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endunless -%}
+
+          <!-- Quantity Selector & Action Buttons -->
+          <div class="space-y-4">
+            <div class="flex items-center gap-4">
+              <!-- Quantity Controls -->
+              <div class="flex items-center border border-gray-200 rounded-full p-1 bg-gray-50/50">
+                <button type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm font-bold text-base transition-all" id="AuraQtyMinus">-</button>
+                <input type="number" name="quantity" value="1" min="1" class="w-10 text-center font-bold text-sm bg-transparent border-none focus:outline-none" id="AuraQtyInput">
+                <button type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm font-bold text-base transition-all" id="AuraQtyPlus">+</button>
+              </div>
+
+              <!-- Add To Cart Button -->
+              <button
+                type="submit"
+                class="flex-1 py-3.5 px-8 bg-black text-white text-xs uppercase font-extrabold tracking-widest rounded-full hover:bg-gray-800 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                {% unless product.available %}disabled{% endunless %}
+              >
+                {% if product.available %}
+                  <span>Add To Bag</span>
+                  <span>—</span>
+                  <span>{{ product.price | money }}</span>
+                {% else %}
+                  <span>Sold Out</span>
+                {% endif %}
+              </button>
+
+              <!-- Wishlist Toggle Button -->
+              <button
+                type="button"
+                id="AuraPdpWishlistBtn"
+                class="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center text-gray-700 hover:text-red-500 hover:border-red-200 hover:bg-red-50/50 transition-all shadow-sm"
+                aria-label="Save to Wishlist"
+                data-handle="{{ product.handle }}"
+                data-title="{{ product.title | escape }}"
+                data-price="{{ product.price | money }}"
+                data-image="{{ product.featured_image | image_url: width: 600 }}"
+                data-url="{{ product.url }}"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              </button>
+            </div>
+
+            {%- if section.settings.show_dynamic_checkout -%}
+              {{ form | payment_button }}
+            {%- endif -%}
+          </div>
+        {%- endform -%}
+
+        <!-- Collapsible Accordion Tabs (Description, Materials, Shipping) -->
+        <div class="mt-8 border-t border-gray-100 divide-y divide-gray-100">
+          <details class="group py-4" open>
+            <summary class="flex items-center justify-between font-bold text-sm text-gray-900 cursor-pointer list-none">
+              <span>Description &amp; Fit</span>
+              <span class="transition-transform group-open:rotate-180 text-gray-400">▾</span>
+            </summary>
+            <div class="mt-3 text-xs text-gray-600 leading-relaxed space-y-2">
+              {{ product.description | default: 'Meticulously crafted from premium sustainable fabrics, designed for effortless elegance and timeless versatility.' }}
+            </div>
+          </details>
+
+          <details class="group py-4">
+            <summary class="flex items-center justify-between font-bold text-sm text-gray-900 cursor-pointer list-none">
+              <span>Materials &amp; Care</span>
+              <span class="transition-transform group-open:rotate-180 text-gray-400">▾</span>
+            </summary>
+            <div class="mt-3 text-xs text-gray-600 leading-relaxed">
+              <p>• 100% Organic Cotton &amp; Eco Silk Blend</p>
+              <p>• Dry clean or hand wash cold recommended</p>
+              <p>• Do not tumble dry. Dry flat in shade.</p>
+            </div>
+          </details>
+
+          <details class="group py-4">
+            <summary class="flex items-center justify-between font-bold text-sm text-gray-900 cursor-pointer list-none">
+              <span>Shipping &amp; Returns</span>
+              <span class="transition-transform group-open:rotate-180 text-gray-400">▾</span>
+            </summary>
+            <div class="mt-3 text-xs text-gray-600 leading-relaxed space-y-1">
+              <p>• Complimentary express shipping on orders over $150.</p>
+              <p>• Hassle-free 30-day returns and exchanges.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="grid grid-cols-3 gap-3 mt-8 pt-6 border-t border-gray-100 text-center">
+          <div class="flex flex-col items-center">
+            <svg class="w-5 h-5 text-gray-700 mb-1" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <span class="text-[11px] font-bold text-gray-800">Express Delivery</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <svg class="w-5 h-5 text-gray-700 mb-1" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span class="text-[11px] font-bold text-gray-800">30-Day Returns</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <svg class="w-5 h-5 text-gray-700 mb-1" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004.07 7.036"/></svg>
+            <span class="text-[11px] font-bold text-gray-800">Sustainable</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    /* 1. PDP Thumbnail Image Switcher */
+    const thumbs = document.querySelectorAll('.aura-pdp-thumb-btn');
+    const mainImg = document.getElementById('AuraPdpMainImage');
+
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const targetSrc = thumb.dataset.targetSrc;
+        if (mainImg && targetSrc) {
+          mainImg.src = targetSrc;
+          thumbs.forEach(t => t.classList.remove('border-black', 'opacity-100'));
+          thumbs.forEach(t => t.classList.add('border-transparent', 'opacity-60'));
+          thumb.classList.remove('border-transparent', 'opacity-60');
+          thumb.classList.add('border-black', 'opacity-100');
+        }
+      });
+    });
+
+    /* 2. Quantity Selector Controls */
+    const qMinus = document.getElementById('AuraQtyMinus');
+    const qPlus = document.getElementById('AuraQtyPlus');
+    const qInput = document.getElementById('AuraQtyInput');
+
+    qMinus?.addEventListener('click', () => {
+      let val = parseInt(qInput.value) || 1;
+      if (val > 1) qInput.value = val - 1;
+    });
+
+    qPlus?.addEventListener('click', () => {
+      let val = parseInt(qInput.value) || 1;
+      qInput.value = val + 1;
+    });
+
+    /* 3. Wishlist Storage Sync */
+    const wishlistBtn = document.getElementById('AuraPdpWishlistBtn');
+    const STORAGE_KEY = 'aura_wishlist_items';
+
+    function getWishlist() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { return []; }
+    }
+
+    if (wishlistBtn) {
+      const handle = wishlistBtn.dataset.handle;
+      let items = getWishlist();
+      let exists = items.some(i => i.handle === handle);
+
+      if (exists) {
+        wishlistBtn.classList.add('bg-red-50', 'text-red-600', 'border-red-300');
+      }
+
+      wishlistBtn.addEventListener('click', () => {
+        items = getWishlist();
+        exists = items.some(i => i.handle === handle);
+
+        if (exists) {
+          items = items.filter(i => i.handle !== handle);
+          wishlistBtn.classList.remove('bg-red-50', 'text-red-600', 'border-red-300');
+        } else {
+          items.push({
+            handle: handle,
+            title: wishlistBtn.dataset.title,
+            price: wishlistBtn.dataset.price,
+            image: wishlistBtn.dataset.image,
+            url: wishlistBtn.dataset.url
+          });
+          wishlistBtn.classList.add('bg-red-50', 'text-red-600', 'border-red-300');
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      });
+    }
+  });
+</script>
+
+{% stylesheet %}
+  .aura-product-main-section {
+    min-height: 80vh;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Aura Product Main",
+  "tag": "section",
+  "class": "section-aura-product-main",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show Dynamic Checkout Button",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
