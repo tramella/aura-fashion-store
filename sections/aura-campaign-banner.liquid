@@ -154,8 +154,8 @@
     background-color: #FFFFFF !important;
     color: #0F0F11 !important;
     border-radius: 9999px !important;
-    padding: 14px 34px !important;
-    font-size: 0.95rem !important;
+    padding: 16px 38px !important;
+    font-size: 1.05rem !important;
     font-weight: 700 !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
     white-space: nowrap;
@@ -164,6 +164,42 @@
   .aura-effortless-action .aura-btn--white:hover {
     background-color: #F3F4F6 !important;
     transform: translateY(-2px) !important;
+  }
+
+  @media (max-width: 768px) {
+    .aura-effortless-banner {
+      padding-top: 2rem;
+      padding-bottom: 3rem;
+    }
+
+    .aura-effortless-card {
+      height: 50vh !important;
+      min-height: 340px !important;
+      max-height: 420px !important;
+    }
+
+    .aura-effortless-title {
+      top: 30% !important;
+      left: 5% !important;
+      font-size: clamp(2.2rem, 7vw, 3.2rem) !important;
+      gap: 0.5rem !important;
+    }
+
+    .aura-effortless-desc {
+      bottom: 5.5rem !important;
+      left: 5% !important;
+      font-size: 0.85rem !important;
+      max-width: 90% !important;
+    }
+
+    .aura-effortless-action {
+      bottom: 1.5rem !important;
+    }
+
+    .aura-effortless-action .aura-btn--white {
+      padding: 12px 28px !important;
+      font-size: 0.9rem !important;
+    }
   }
 {% endstylesheet %}
 

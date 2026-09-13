@@ -6,7 +6,21 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="">
     <link rel="canonical" href="{{ canonical_url }}">
-    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script src="https://cdn.tailwindcss.com" defer="defer"></script>
+    <style>
+      /* Critical pre-paint layout containment to eliminate FOUC */
+      body {
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+      .page-width {
+        max-width: var(--page-width, 1200px);
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+    </style>
 
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
