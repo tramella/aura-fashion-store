@@ -1,73 +1,152 @@
-<div class="aura-luneva-header-wrapper relative w-full bg-white border-b border-gray-100 z-50">
-  <header class="aura-luneva-header page-width flex items-center justify-between py-5">
-    <!-- Left Section: Mobile Hamburger Toggle & Brand Logo -->
+<div class="aura-luneva-header-wrapper relative w-full bg-white border-b border-gray-100 z-[9990]">
+  <header class="aura-luneva-header page-width flex items-center justify-between py-4 md:py-5">
+    <!-- Left Section: Brand Logo -->
     <div class="aura-header-left flex items-center gap-4 flex-1">
-      <button type="button" class="aura-mobile-hamburger-btn md:hidden text-gray-900 focus:outline-none" id="AuraMobileMenuOpen" aria-label="Open navigation menu">
-        <svg width="22" height="18" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="0" y1="2" x2="24" y2="2"></line><line x1="0" y1="9" x2="24" y2="9"></line><line x1="0" y1="16" x2="24" y2="16"></line></svg>
-      </button>
-      <a href="{{ routes.root_url }}" class="aura-brand-logo text-4xl lg:text-5xl font-serif italic font-bold tracking-tight text-gray-900 no-underline">
-        {{ section.settings.logo_text | default: 'AURA' }}
+      <a href="{{ routes.root_url }}" class="aura-brand-logo-link flex items-center no-underline">
+        {%- if section.settings.logo != blank -%}
+          {%- assign logo_alt = section.settings.logo.alt | default: shop.name | escape -%}
+          {%- assign logo_height = section.settings.logo_width | divided_by: section.settings.logo.aspect_ratio -%}
+          {{
+            section.settings.logo
+            | image_url: width: 600
+            | image_tag:
+              class: 'aura-header-logo-img object-contain',
+              widths: '50, 100, 150, 200, 250, 300, 400, 500, 600',
+              height: logo_height,
+              width: section.settings.logo_width,
+              alt: logo_alt,
+              preload: true
+          }}
+        {%- else -%}
+          <svg width="130" height="42" viewBox="0 0 130 42" fill="none" xmlns="http://www.w3.org/2000/svg" class="aura-brand-logo-svg">
+            <text x="0" y="32" font-family="Playfair Display, Georgia, serif" font-size="34" font-weight="700" font-style="italic" letter-spacing="-1" fill="#0F0F11">AURA</text>
+          </svg>
+        {%- endif -%}
       </a>
     </div>
 
     <!-- Center Mega Menu Navigation Links (Desktop) -->
     {% render 'header-mega-menu' %}
 
-    <!-- Right Icons: Wishlist ♡, Account 👤, Shopping Bag 🛍️ -->
+    <!-- Right Section: Desktop Icons & Mobile Hamburger Toggle -->
     <div class="aura-header-right flex items-center justify-end gap-6 flex-1 text-gray-900">
-      <a href="/pages/wishlist" class="aura-icon-link hover:opacity-75 transition-opacity" aria-label="Wishlist">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-      </a>
+      <!-- Desktop Only Icons (Wishlist, Account, Cart — Visible on Laptop/Desktop >= 990px) -->
+      <div class="aura-header-right-desktop flex items-center gap-6">
+        <a href="/pages/wishlist" class="aura-icon-link hover:opacity-75 transition-opacity" aria-label="Wishlist">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        </a>
 
-      <a href="{{ routes.account_url }}" class="aura-icon-link hover:opacity-75 transition-opacity" aria-label="Account">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      </a>
+        <a href="{{ routes.account_url }}" class="aura-icon-link hover:opacity-75 transition-opacity" aria-label="Account">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
 
-      <a href="{{ routes.cart_url }}" class="aura-icon-link aura-cart-link relative hover:opacity-75 transition-opacity" aria-label="Cart">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-        <span class="aura-cart-badge-pill absolute -top-2 -right-2.5 bg-black text-white rounded-full w-5 h-5 text-[11px] font-extrabold flex items-center justify-center leading-none shadow-sm z-10">{{ cart.item_count | default: 0 }}</span>
-      </a>
+        <a href="{{ routes.cart_url }}" class="aura-icon-link aura-cart-link relative hover:opacity-75 transition-opacity" aria-label="Cart">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <span class="aura-cart-badge-pill absolute -top-2 -right-2.5 bg-black text-white rounded-full w-5 h-5 text-[11px] font-extrabold flex items-center justify-center leading-none shadow-sm z-10">{{ cart.item_count | default: 0 }}</span>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Toggle (Replaces Top Icons on Mobile < 990px) -->
+      <button type="button" class="aura-mobile-hamburger-btn text-gray-900 focus:outline-none p-1 z-10" id="AuraMobileMenuOpen" aria-label="Open navigation menu">
+        <svg width="24" height="20" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="0" y1="2" x2="24" y2="2"></line><line x1="0" y1="9" x2="24" y2="9"></line><line x1="0" y1="16" x2="24" y2="16"></line></svg>
+      </button>
     </div>
   </header>
 </div>
 
-<!-- Mobile Navigation Drawer -->
-<div class="aura-mobile-drawer fixed inset-0 z-50 invisible opacity-0 transition-all duration-300" id="AuraMobileDrawer" aria-hidden="true">
-  <div class="aura-mobile-drawer__overlay absolute inset-0 bg-gray-900/60 backdrop-blur-sm" id="AuraMobileDrawerOverlay"></div>
-  <div class="aura-mobile-drawer__content absolute top-0 left-0 w-4/5 max-w-xs h-full bg-white p-6 flex flex-col justify-between shadow-2xl -translate-x-full transition-transform duration-300">
-    <div class="aura-mobile-drawer__header flex items-center justify-between pb-4 border-b border-gray-200">
-      <a href="{{ routes.root_url }}" class="aura-brand-logo text-2xl font-serif italic font-bold text-gray-900">{{ section.settings.logo_text | default: 'AURA' }}</a>
-      <button type="button" class="aura-mobile-drawer__close text-2xl text-gray-900" id="AuraMobileMenuClose" aria-label="Close menu">&times;</button>
+<!-- Mobile Navigation Drawer (Right Side Drawer — High Fashion Modern UI) -->
+<div class="aura-mobile-drawer fixed inset-0 z-[10000] invisible opacity-0 transition-all duration-300" id="AuraMobileDrawer" aria-hidden="true">
+  <div class="aura-mobile-drawer__overlay absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-300" id="AuraMobileDrawerOverlay"></div>
+  <div class="aura-mobile-drawer__content absolute top-0 right-0 left-auto w-[85%] max-w-sm h-full bg-white/95 backdrop-blur-2xl p-7 flex flex-col justify-between shadow-2xl translate-x-full transition-transform duration-300 border-l border-gray-200/50">
+    <!-- Drawer Header -->
+    <div class="aura-mobile-drawer__header flex items-center justify-between pb-5 border-b border-gray-100">
+      <a href="{{ routes.root_url }}" class="aura-brand-logo-link flex items-center no-underline">
+        {%- if section.settings.logo != blank -%}
+          {%- assign logo_alt = section.settings.logo.alt | default: shop.name | escape -%}
+          {{
+            section.settings.logo
+            | image_url: width: 400
+            | image_tag:
+              class: 'aura-header-logo-img object-contain',
+              width: 110,
+              alt: logo_alt
+          }}
+        {%- else -%}
+          <svg width="110" height="36" viewBox="0 0 130 42" fill="none" xmlns="http://www.w3.org/2000/svg" class="aura-brand-logo-svg">
+            <text x="0" y="32" font-family="Playfair Display, Georgia, serif" font-size="34" font-weight="700" font-style="italic" letter-spacing="-1" fill="#0F0F11">AURA</text>
+          </svg>
+        {%- endif -%}
+      </a>
+      <button type="button" class="aura-mobile-drawer__close w-9 h-9 rounded-full bg-gray-100/80 hover:bg-gray-200 flex items-center justify-center text-gray-800 transition-colors focus:outline-none" id="AuraMobileMenuClose" aria-label="Close menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
     </div>
 
+    <!-- Navigation Links -->
     {%- assign main_menu = section.settings.menu | default: 'main-menu' -%}
-    <nav class="aura-mobile-drawer__nav flex flex-col gap-5 mt-6 mb-auto">
+    <nav class="aura-mobile-drawer__nav flex flex-col gap-4 mt-8 mb-auto overflow-y-auto">
       {%- if linklists[main_menu].links.size > 0 -%}
         {%- for link in linklists[main_menu].links -%}
           {%- assign link_title_downcase = link.title | downcase -%}
           <a
             href="{{ link.url }}"
-            class="aura-mobile-drawer__link text-lg font-bold {% if link_title_downcase == 'sale' %}text-red-500{% else %}text-gray-900{% endif %}"
+            class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium tracking-tight py-2 transition-all duration-200 hover:translate-x-1.5 {% if link_title_downcase == 'sale' %}text-red-500 font-bold{% else %}text-gray-900 hover:text-black{% endif %}"
           >
-            {{ link.title | escape }}
+            <span>{{ link.title | escape }}</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-40"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
         {%- endfor -%}
       {%- else -%}
-        <a href="{{ routes.all_products_collection_url }}" class="aura-mobile-drawer__link text-lg font-bold text-gray-900">New Arrivals</a>
-        <a href="{{ routes.collections_url }}/women" class="aura-mobile-drawer__link text-lg font-bold text-gray-900">Women</a>
-        <a href="{{ routes.collections_url }}/men" class="aura-mobile-drawer__link text-lg font-bold text-gray-900">Men</a>
-        <a href="{{ routes.collections_url }}/kids" class="aura-mobile-drawer__link text-lg font-bold text-gray-900">Kids</a>
-        <a href="{{ routes.collections_url }}/sale" class="aura-mobile-drawer__link text-lg font-bold text-red-500">Sale</a>
-        <a href="{{ routes.all_products_collection_url }}" class="aura-mobile-drawer__link text-lg font-bold text-gray-900">Collections</a>
+        <a href="{{ routes.all_products_collection_url }}" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium text-gray-900 py-2 hover:translate-x-1.5 transition-all"><span>New Arrivals</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+        <a href="{{ routes.collections_url }}/women" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium text-gray-900 py-2 hover:translate-x-1.5 transition-all"><span>Women</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+        <a href="{{ routes.collections_url }}/men" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium text-gray-900 py-2 hover:translate-x-1.5 transition-all"><span>Men</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+        <a href="{{ routes.collections_url }}/kids" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium text-gray-900 py-2 hover:translate-x-1.5 transition-all"><span>Kids</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+        <a href="{{ routes.collections_url }}/sale" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-bold text-red-500 py-2 hover:translate-x-1.5 transition-all"><span>Sale</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+        <a href="{{ routes.all_products_collection_url }}" class="aura-mobile-drawer__link flex items-center justify-between text-xl font-medium text-gray-900 py-2 hover:translate-x-1.5 transition-all"><span>Collections</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
       {%- endif -%}
     </nav>
 
-    <div class="aura-mobile-drawer__footer pt-4 border-t border-gray-200 flex gap-6 text-sm font-semibold text-gray-500">
-      <a href="{{ routes.account_url }}" class="aura-mobile-drawer__sublink hover:text-gray-900">My Account</a>
-      <a href="/pages/wishlist" class="aura-mobile-drawer__sublink hover:text-gray-900">Wishlist</a>
+    <!-- Drawer Footer -->
+    <div class="aura-mobile-drawer__footer pt-5 border-t border-gray-100 flex flex-col gap-3">
+      <div class="flex items-center justify-between text-sm font-semibold text-gray-600">
+        <a href="{{ routes.account_url }}" class="hover:text-black transition-colors flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>My Account</span>
+        </a>
+        <a href="/pages/wishlist" class="hover:text-black transition-colors flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <span>Wishlist</span>
+        </a>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Mobile Bottom Navigation Bar (App-like navbar at bottom for mobile) -->
+<nav class="aura-mobile-bottom-nav fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200/80 py-2 px-3 md:hidden flex items-center justify-around shadow-[0_-4px_20px_rgba(0,0,0,0.06)]" aria-label="Mobile Bottom Navigation">
+  <a href="{{ routes.root_url }}" class="aura-bottom-nav-item flex flex-col items-center gap-1 text-gray-700 hover:text-gray-900 no-underline text-[11px] font-medium transition-colors">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    <span>Home</span>
+  </a>
+
+  <a href="/pages/wishlist" class="aura-bottom-nav-item flex flex-col items-center gap-1 text-gray-700 hover:text-gray-900 no-underline text-[11px] font-medium transition-colors">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    <span>Wishlist</span>
+  </a>
+
+  <a href="{{ routes.account_url }}" class="aura-bottom-nav-item flex flex-col items-center gap-1 text-gray-700 hover:text-gray-900 no-underline text-[11px] font-medium transition-colors">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    <span>Account</span>
+  </a>
+
+  <a href="{{ routes.cart_url }}" class="aura-bottom-nav-item relative flex flex-col items-center gap-1 text-gray-700 hover:text-gray-900 no-underline text-[11px] font-medium transition-colors">
+    <div class="relative flex items-center justify-center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      <span class="aura-cart-badge-pill absolute -top-1.5 -right-2 bg-black text-white rounded-full w-4 h-4 text-[10px] font-extrabold flex items-center justify-center leading-none shadow-sm z-10">{{ cart.item_count | default: 0 }}</span>
+    </div>
+    <span>Cart</span>
+  </a>
+</nav>
 
 <!-- Scroll To Top Floating Button -->
 <button type="button" class="aura-scroll-top-btn" id="AuraScrollTopBtn" aria-label="Scroll to top">
@@ -84,13 +163,13 @@
 
     function openDrawer() {
       drawer?.classList.add('is-open', '!visible', '!opacity-100');
-      drawer?.querySelector('.aura-mobile-drawer__content')?.classList.remove('-translate-x-full');
+      drawer?.querySelector('.aura-mobile-drawer__content')?.classList.remove('translate-x-full');
       document.body.style.overflow = 'hidden';
     }
 
     function closeDrawer() {
       drawer?.classList.remove('is-open', '!visible', '!opacity-100');
-      drawer?.querySelector('.aura-mobile-drawer__content')?.classList.add('-translate-x-full');
+      drawer?.querySelector('.aura-mobile-drawer__content')?.classList.add('translate-x-full');
       document.body.style.overflow = '';
     }
 
@@ -132,6 +211,7 @@
 {% stylesheet %}
   .aura-luneva-header-wrapper {
     position: relative !important;
+    z-index: 9990 !important;
     transition: background-color 200ms ease;
   }
 
@@ -141,10 +221,18 @@
     top: 0;
     left: 0;
     width: 100% !important;
-    z-index: 1000 !important;
+    z-index: 9995 !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
     background-color: #FFFFFF !important;
     animation: auraHeaderStickySlideDown 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .aura-mobile-drawer {
+    z-index: 10000 !important;
+  }
+
+  .aura-mobile-bottom-nav {
+    z-index: 9980 !important;
   }
 
   @keyframes auraHeaderStickySlideDown {
@@ -182,8 +270,8 @@
   /* Floating Scroll-To-Top Button */
   .aura-scroll-top-btn {
     position: fixed;
-    bottom: 2.25rem;
-    right: 2.25rem;
+    bottom: 3rem;
+    right: 2.5rem;
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -199,7 +287,7 @@
     visibility: hidden;
     transform: translateY(20px) scale(0.8);
     transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 999;
+    z-index: 9985 !important;
   }
 
   .aura-scroll-top-btn.is-visible {
@@ -218,19 +306,70 @@
     transition: transform 200ms ease;
   }
 
-  .aura-scroll-top-btn:hover svg {
-    transform: translateY(-2px);
+  .aura-header-logo-img,
+  .aura-brand-logo-svg {
+    height: auto !important;
+    display: block;
   }
 
   @media (min-width: 990px) {
+    .aura-header-logo-img,
+    .aura-brand-logo-svg {
+      width: 150px !important;
+      max-width: 150px !important;
+    }
+
+    .aura-header-right-desktop {
+      display: flex !important;
+    }
     .aura-mobile-hamburger-btn {
       display: none !important;
+    }
+    .aura-mobile-bottom-nav {
+      display: none !important;
+    }
+    .aura-scroll-top-btn {
+      bottom: 3rem !important;
+      right: 2.5rem !important;
     }
   }
 
   @media (max-width: 989px) {
+    body {
+      padding-bottom: 60px !important;
+    }
+
+    .aura-luneva-header {
+      padding-left: 1.25rem !important;
+      padding-right: 1.25rem !important;
+    }
+
+    .aura-header-logo-img,
+    .aura-brand-logo-svg {
+      width: 130px !important;
+      max-width: 130px !important;
+    }
+
+    .aura-header-right-desktop {
+      display: none !important;
+    }
+
+    .aura-mobile-hamburger-btn {
+      display: flex !important;
+      padding: 0 !important;
+    }
+
+    .aura-mobile-bottom-nav {
+      display: flex !important;
+    }
+
     .aura-header-center {
       display: none !important;
+    }
+
+    .aura-scroll-top-btn {
+      bottom: 6.5rem !important;
+      right: 1.5rem !important;
     }
   }
 {% endstylesheet %}
@@ -242,9 +381,24 @@
   "class": "section-luneva-header",
   "settings": [
     {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image (SVG / PNG)"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 300,
+      "step": 5,
+      "default": 140,
+      "unit": "px",
+      "label": "Custom Logo Width"
+    },
+    {
       "type": "text",
       "id": "logo_text",
-      "label": "Logo Text",
+      "label": "Fallback Logo Text",
       "default": "AURA"
     },
     {

@@ -1,6 +1,6 @@
 <footer class="aura-luneva-footer-section">
   <div class="page-width">
-    <!-- Dark Newsletter Block (Matching Image 4) -->
+    <!-- Dark Newsletter Block -->
     <div class="aura-luneva-newsletter">
       <h2 class="aura-luneva-newsletter-title">
         <span>Subscribe Our</span>
@@ -9,23 +9,28 @@
 
       {%- form 'customer', class: 'aura-luneva-newsletter-form' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
-        <input
-          type="email"
-          name="contact[email]"
-          placeholder="Enter your email"
-          required
-          class="aura-luneva-newsletter-input"
-        >
-        <button type="submit" class="aura-btn aura-btn--white">Subscribe</button>
+        <div class="aura-luneva-newsletter-input-group">
+          <input
+            type="email"
+            name="contact[email]"
+            placeholder="Enter your email"
+            required
+            class="aura-luneva-newsletter-input"
+          >
+          <button type="submit" class="aura-btn aura-btn--white aura-luneva-newsletter-btn">Subscribe</button>
+        </div>
       {%- endform -%}
     </div>
 
     <div class="aura-luneva-footer-divider"></div>
 
-    <!-- 4 Columns Mega Footer Grid -->
+    <!-- 4 Columns Mega Footer Grid with Mobile Accordions -->
     <div class="aura-luneva-footer-grid">
       <div class="aura-luneva-col">
-        <h3 class="aura-luneva-col-title">Women</h3>
+        <button type="button" class="aura-luneva-col-title-btn" aria-expanded="false">
+          <span class="aura-luneva-col-title">Women</span>
+          <svg class="aura-luneva-col-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
         <ul class="aura-luneva-link-list">
           <li><a href="/collections/women">Tops &amp; Blouses</a></li>
           <li><a href="/collections/women">Dresses &amp; Jumpsuits</a></li>
@@ -37,7 +42,10 @@
       </div>
 
       <div class="aura-luneva-col">
-        <h3 class="aura-luneva-col-title">Men</h3>
+        <button type="button" class="aura-luneva-col-title-btn" aria-expanded="false">
+          <span class="aura-luneva-col-title">Men</span>
+          <svg class="aura-luneva-col-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
         <ul class="aura-luneva-link-list">
           <li><a href="/collections/men">Shirts &amp; Polos</a></li>
           <li><a href="/collections/men">T-Shirts &amp; Sweaters</a></li>
@@ -49,7 +57,10 @@
       </div>
 
       <div class="aura-luneva-col">
-        <h3 class="aura-luneva-col-title">Kids</h3>
+        <button type="button" class="aura-luneva-col-title-btn" aria-expanded="false">
+          <span class="aura-luneva-col-title">Kids</span>
+          <svg class="aura-luneva-col-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
         <ul class="aura-luneva-link-list">
           <li><a href="/collections/kids">Girls</a></li>
           <li><a href="/collections/kids">Boys</a></li>
@@ -59,7 +70,10 @@
       </div>
 
       <div class="aura-luneva-col">
-        <h3 class="aura-luneva-col-title">The Company</h3>
+        <button type="button" class="aura-luneva-col-title-btn" aria-expanded="false">
+          <span class="aura-luneva-col-title">The Company</span>
+          <svg class="aura-luneva-col-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
         <ul class="aura-luneva-link-list">
           <li><a href="{{ routes.account_url }}">My Order</a></li>
           <li><a href="/pages/contact">Contact Us</a></li>
@@ -70,12 +84,41 @@
       </div>
     </div>
 
-    <!-- Ultra-Large Brand Logo at Bottom (Matching Image 4) -->
+    <!-- Ultra-Large Brand Logo at Bottom -->
     <div class="aura-footer-big-brand">
       <span>AURA</span>
     </div>
   </div>
 </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const colBtns = document.querySelectorAll('.aura-luneva-col-title-btn');
+    colBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          const parentCol = btn.closest('.aura-luneva-col');
+          const isOpen = parentCol?.classList.contains('is-open');
+
+          document.querySelectorAll('.aura-luneva-col').forEach(col => {
+            if (col !== parentCol) {
+              col.classList.remove('is-open');
+              col.querySelector('.aura-luneva-col-title-btn')?.setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          if (isOpen) {
+            parentCol?.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+          } else {
+            parentCol?.classList.add('is-open');
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        }
+      });
+    });
+  });
+</script>
 
 {% stylesheet %}
   .aura-luneva-footer-section {
@@ -83,7 +126,7 @@
     color: #FFFFFF;
     margin-top: 5rem !important;
     padding-top: 4.5rem;
-    padding-bottom: 2rem;
+    padding-bottom: 3rem;
     overflow: hidden;
     position: relative;
   }
@@ -94,13 +137,6 @@
     justify-content: space-between;
     gap: 2rem;
     padding-bottom: 3rem;
-  }
-
-  @media (max-width: 768px) {
-    .aura-luneva-newsletter {
-      flex-direction: column;
-      align-items: flex-start;
-    }
   }
 
   .aura-luneva-newsletter-title {
@@ -114,15 +150,20 @@
   }
 
   .aura-luneva-newsletter-form {
+    width: 100%;
+    max-width: 460px;
+  }
+
+  .aura-luneva-newsletter-input-group {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     width: 100%;
-    max-width: 440px;
   }
 
   .aura-luneva-newsletter-input {
     flex: 1;
+    min-width: 0;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 9999px;
@@ -130,10 +171,23 @@
     font-size: 0.88rem;
     color: #FFFFFF;
     outline: none;
+    transition: border-color 200ms ease;
+  }
+
+  .aura-luneva-newsletter-input:focus {
+    border-color: rgba(255, 255, 255, 0.4);
   }
 
   .aura-luneva-newsletter-input::placeholder {
     color: rgba(255, 255, 255, 0.4);
+  }
+
+  .aura-luneva-newsletter-btn {
+    white-space: nowrap;
+    border-radius: 9999px;
+    padding: 12px 24px;
+    font-size: 0.88rem;
+    font-weight: 600;
   }
 
   .aura-luneva-footer-divider {
@@ -149,11 +203,30 @@
     padding-bottom: 4rem;
   }
 
+  .aura-luneva-col-title-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0 0 1.25rem 0;
+    color: #FFFFFF;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+    cursor: default;
+  }
+
   .aura-luneva-col-title {
     font-size: 1.15rem;
     font-weight: 600;
-    margin-bottom: 1.25rem;
     color: #FFFFFF;
+  }
+
+  .aura-luneva-col-icon {
+    display: none;
+    transition: transform 300ms ease;
   }
 
   .aura-luneva-link-list {
@@ -176,7 +249,7 @@
     color: #FFFFFF;
   }
 
-  /* Ultra-Large Brand Logo at Footer Bottom (Image 4) */
+  /* Ultra-Large Brand Logo at Footer Bottom */
   .aura-footer-big-brand {
     text-align: center;
     padding-top: 2rem;
@@ -185,13 +258,112 @@
 
   .aura-footer-big-brand span {
     font-family: var(--aura-font-serif-italic);
-    font-size: clamp(5rem, 16vw, 13rem);
+    font-size: clamp(4.5rem, 16vw, 13rem);
     font-weight: 700;
     line-height: 0.85;
     color: #FFFFFF;
     opacity: 0.95;
     letter-spacing: -0.03em;
     display: inline-block;
+  }
+
+  /* Mobile Responsive Optimization (Collapsible Accordion & Extra Bottom Space) */
+  @media (max-width: 768px) {
+    .aura-luneva-footer-section {
+      margin-top: 3rem !important;
+      padding-top: 2.5rem;
+      padding-bottom: 5.5rem !important; /* Extra clearance for mobile bottom navbar */
+    }
+
+    .aura-luneva-newsletter {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1.25rem;
+      padding-bottom: 2rem;
+    }
+
+    .aura-luneva-newsletter-title {
+      font-size: 1.75rem;
+    }
+
+    .aura-luneva-newsletter-form {
+      max-width: 100%;
+    }
+
+    .aura-luneva-newsletter-input-group {
+      flex-direction: row;
+      gap: 8px;
+    }
+
+    .aura-luneva-newsletter-input {
+      padding: 10px 16px;
+      font-size: 0.84rem;
+    }
+
+    .aura-luneva-newsletter-btn {
+      padding: 10px 18px;
+      font-size: 0.84rem;
+    }
+
+    .aura-luneva-footer-divider {
+      margin-bottom: 1.5rem;
+    }
+
+    .aura-luneva-footer-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0 !important;
+      padding-bottom: 2rem;
+    }
+
+    .aura-luneva-col {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .aura-luneva-col-title-btn {
+      cursor: pointer;
+      padding: 1rem 0;
+      margin: 0;
+    }
+
+    .aura-luneva-col-title {
+      font-size: 1rem;
+    }
+
+    .aura-luneva-col-icon {
+      display: block;
+    }
+
+    .aura-luneva-col.is-open .aura-luneva-col-icon {
+      transform: rotate(180deg);
+    }
+
+    .aura-luneva-link-list {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 350ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms ease, padding 300ms ease;
+      gap: 0.6rem;
+      padding-bottom: 0;
+    }
+
+    .aura-luneva-col.is-open .aura-luneva-link-list {
+      max-height: 400px;
+      opacity: 1;
+      padding-bottom: 1.25rem;
+    }
+
+    .aura-luneva-link-list a {
+      font-size: 0.85rem;
+    }
+
+    .aura-footer-big-brand {
+      padding-top: 1.5rem;
+    }
+
+    .aura-footer-big-brand span {
+      font-size: clamp(3rem, 16vw, 4.5rem);
+    }
   }
 {% endstylesheet %}
 
